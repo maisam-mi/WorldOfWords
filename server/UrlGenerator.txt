@@ -1,0 +1,2 @@
+Ein Url Link wird in Backend erstellt und zu Frontend geschickt. Dann kann der Admin den Url mit andere Personen mitteilen.
+Wenn ein Person den Link klickt, soll er zum Lobby geführt werden. 
