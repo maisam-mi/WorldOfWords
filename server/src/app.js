@@ -2,11 +2,10 @@ import dotenv from 'dotenv';
 import { createServer } from 'node:http';
 import { Server } from 'socket.io';
 import { v4 as uuidv4 } from 'uuid';
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { generateRandomLetter, checkAnswer } from './methods.js';
 
 dotenv.config();
 
-const genAI = new GoogleGenerativeAI(process.env.API_KEY);
 
 const server = createServer();
 
@@ -21,26 +20,7 @@ let users = [];
 let lobbies = [];
 
 
-const generateRandomLetter = () => {
-  const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWZ';
-  const randomIndex = Math.floor(Math.random() * alphabet.length);
-  if (alphabet[randomIndex] === '') return generateRandomLetter();
-  return alphabet[randomIndex];
-};
 
-const checkAnswer = async (label, category, letter) => {
-  const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
-  if (label === '' || label === ' ' || label.length <= 1) {
-    const result = 'falsch';
-    return result;
-  } else {
-    const prompt = `Ist ${label} ein ${category}, das mit der Buchstabe ${letter} anfängt, dann antworte mir nur mit 'Ja', ansonsten mit 'Nein'`;
-    const result = await model.generateContent(prompt);
-    const { response } = result;
-    const text = response.text();
-    return text;
-  }
-};
 
 // the Client is connected to server!
 io.on('connection', (socket) => {

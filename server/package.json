@@ -1,8 +1,8 @@
 {
-  "name": "express-templ",
+  "name": "WorldOfWords_server",
   "version": "1.0.0",
-  "description": "A web server with PostgreSQL integration responds to HTTP requests and stores data in a PostgreSQL database.",
-  "author": "Hossaini Hosain",
+  "description": "A web server with socket.io for bidirectional and low-latency communication.",
+  "author": "Maisam Mohammadi",
   "type": "module",
   "main": "app.js",
   "scripts": {
@@ -19,10 +19,8 @@
     "express-async-handler": "^1.2.0",
     "is-my-json-valid": "^2.20.6",
     "morgan": "^1.10.0",
-    "pg": "^8.10.0",
     "socket.io": "^4.7.2",
-    "uuid": "^9.0.1",
-    "ws": "^8.14.2"
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "eslint": "^8.36.0",
