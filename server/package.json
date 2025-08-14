@@ -4,11 +4,11 @@
   "description": "A web server with socket.io for bidirectional and low-latency communication.",
   "author": "Maisam Mohammadi",
   "type": "module",
-  "main": "app.js",
+  "main": "main.js",
   "scripts": {
-    "dev": "nodemon ./src/app.js",
+    "dev": "nodemon ./src/main.js",
     "lint": "eslint . --ext .js",
-    "start": "node ./src/app.js"
+    "start": "node ./src/main.js"
   },
   "dependencies": {
     "@google/generative-ai": "^0.3.0",

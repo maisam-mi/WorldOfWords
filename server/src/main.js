@@ -6,7 +6,6 @@ import { generateRandomLetter, checkAnswer } from './methods.js';
 
 dotenv.config();
 
-
 const server = createServer();
 
 const io = new Server(server, {
@@ -16,11 +15,7 @@ const io = new Server(server, {
 });
 
 let users = [];
-
 let lobbies = [];
-
-
-
 
 // the Client is connected to server!
 io.on('connection', (socket) => {
