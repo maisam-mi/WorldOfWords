@@ -50,14 +50,14 @@
   </div>
 </template>
 <script setup>
-import useDefaultStore from '@/stores/defaultStore.js';
+import mainStore from '@/stores/store.js';
 import CountdownComp from '../components/CountdownComp.vue';
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
 
 console.log('Step 4');
 
-const myStore = useDefaultStore();
+const myStore = mainStore();
 
 const router = useRouter();
 

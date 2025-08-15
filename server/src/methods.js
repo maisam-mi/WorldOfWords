@@ -1,4 +1,33 @@
+import { v4 as uuidv4 } from 'uuid';
 import { GoogleGenerativeAI } from '@google/generative-ai';
+
+export const createLobby = async (playerId, playerName, lobbies) => {
+  console.log(playerId, 'step 2: lobby is created and the player is its admin.');
+
+  // the lobby is created and added to lobbies array
+  const lobby = {
+    url: uuidv4(),
+    timelimit: null, // I have to think about
+    countOfRounds: 1,
+    selfcheck: true,
+    categories: [],
+    players: [
+      {
+        id: playerId,
+        name: playerName,
+        isAdmin: true,
+        playerPoints: 0,
+        progress: [],
+      },
+    ],
+    rounds: [],
+  };
+  lobbies.push(lobby);
+
+  // Should I send a lobby with different structure to every player?
+  socket.join(lobby.url);
+  io.to(lobby.url).emit('user receive your lobby', lobby);
+};
 
 export const generateRandomLetter = () => {
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWZ';
@@ -21,4 +50,12 @@ export const checkAnswer = async (label, category, letter) => {
     const text = response.text();
     return text;
   }
+};
+
+export const removePlayer = async (playerId, lobbies) => {
+  console.log(playerId, 'step ?: user exited the game!');
+  // If the disconnected user is an admin, the lobby is removed.
+  // lobbies = lobbies.filter((el) => el.admin.id !== socket.id);
+
+  // users = users.filter((el) => el.id !== socket.id);
 };

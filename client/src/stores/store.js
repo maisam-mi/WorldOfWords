@@ -2,8 +2,8 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { io } from 'socket.io-client';
 
-const useDefaultStore = defineStore(
-  'DefaultId',
+const mainStore = defineStore(
+  'main Store',
   () => {
     const socket = io('http://localhost:3000');
 
@@ -116,4 +116,4 @@ const useDefaultStore = defineStore(
   },
 );
 
-export default useDefaultStore;
+export default mainStore;

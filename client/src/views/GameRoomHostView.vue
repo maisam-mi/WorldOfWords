@@ -84,12 +84,12 @@
 </template>
 
 <script setup>
-import useDefaultStore from '@/stores/defaultStore.js';
+import mainStore from '@/stores/store.js';
 import { useRouter } from 'vue-router';
 
 console.log('Step 2');
 
-const myStore = useDefaultStore();
+const myStore = mainStore();
 
 const router = useRouter();
 

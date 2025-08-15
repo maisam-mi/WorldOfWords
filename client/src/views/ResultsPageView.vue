@@ -6,7 +6,7 @@
     <div
       class="space-between mx-auto hidden grid-flow-col items-end justify-end gap-12 text-xl md:flex"
     >
-      <div v-if="myStore.lobby.result.length > 1"  class="h-[10vh] text-center">
+      <div v-if="myStore.lobby.result.length > 1" class="h-[10vh] text-center">
         <img src="../assets/images/Num2.svg" class="row-start-2" alt="" />
 
         <p class="text-[#A1A1A1]" style="text-align: center">{{ myStore.lobby.result[1].name }}</p>
@@ -23,7 +23,7 @@
         </p>
         <label class="text-white">Punkte: {{ myStore.lobby.result[0].points }}</label>
       </div>
-      <div v-if="myStore.lobby.result.length > 2"  class="h-[10vh] text-center">
+      <div v-if="myStore.lobby.result.length > 2" class="h-[10vh] text-center">
         <img src="../assets/images/Num3.svg" class="row-start-2" alt="" />
         <p class="text-[#8B6222]" style="text-align: center">
           {{ myStore.lobby.result[2].name }}
@@ -75,9 +75,9 @@
   </div>
 </template>
 <script setup>
-import useDefaultStore from '@/stores/defaultStore.js';
+import mainStore from '@/stores/store.js';
 
-const myStore = useDefaultStore();
+const myStore = mainStore();
 
 console.log('Step 5');
 

@@ -31,22 +31,22 @@
     <div></div>
     <div class="flex flex-wrap justify-between">
       <div class="ml-0 w-32 md:ml-[-15%]">
-          <img
-            src="../assets/images/ArrowLeft.svg"
-            class="hover-effect-left"
-            alt=""
-            @click="leaving()"
-          />
+        <img
+          src="../assets/images/ArrowLeft.svg"
+          class="hover-effect-left"
+          alt=""
+          @click="leaving()"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import useDefaultStore from '@/stores/defaultStore.js';
+import mainStore from '@/stores/store.js';
 import { useRouter } from 'vue-router';
 
-const myStore = useDefaultStore();
+const myStore = mainStore();
 const router = useRouter();
 
 console.log(myStore.lobby);

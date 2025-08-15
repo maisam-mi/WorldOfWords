@@ -10,16 +10,15 @@
 </template>
 
 <script setup>
-import useDefaultStore from '@/stores/defaultStore.js';
+import mainStore from '@/stores/store.js';
 import { useRouter } from 'vue-router';
 import CountdownLetterComp from '../components/CountdownLetterComp.vue';
 
 console.log('Step 3');
 
-const myStore = useDefaultStore();
+const myStore = mainStore();
 
 const router = useRouter();
-
 
 setTimeout(() => {
   router.push('/game');
