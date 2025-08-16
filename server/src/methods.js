@@ -24,9 +24,7 @@ export const createLobby = async (playerId, playerName, lobbies) => {
   };
   lobbies.push(lobby);
 
-  // Should I send a lobby with different structure to every player?
-  socket.join(lobby.url);
-  io.to(lobby.url).emit('user receive your lobby', lobby);
+  return lobby;
 };
 
 export const generateRandomLetter = () => {
