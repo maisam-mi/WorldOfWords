@@ -35,6 +35,9 @@ input {
   border-bottom: 2px solid #eaeaea;
 }
 input[type='text'] {
-  padding-left: 5px;
+  padding: 0px 5px;
+}
+input:focus {
+  outline: none;
 }
 </style>

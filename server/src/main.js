@@ -22,8 +22,8 @@ io.on('connection', (socket) => {
   console.log(socket.id, 'step 1: user attended the game.');
 
   // a lobby is created and the client becomes its admin.
-  socket.on('lobby and admin creation', (playerName) => {
-    const lobby = methods.createLobby(socket.id, playerName, lobbies);
+  socket.on('lobby and admin creation', async (playerName) => {
+    const lobby = await methods.createLobby(socket.id, playerName, lobbies);
 
     // Should I send a lobby with different structure to every player?
     socket.emit('user receive your lobby', lobby); // Here the whole lobby is sent to admin.
