@@ -1,7 +1,7 @@
 <template>
   <main class="flex flex-col gap-4 items-center">
     <img src="/logo/logo.webp" alt="logo of World of Words" />
-    <input type="text" name="name" placeholder="Name" v-model="username" />
+    <input type="text" name="name" placeholder="Name" v-model="username"/>
     <button @click="createLobby()">Create a lobby</button>
     <p>or</p>
 
@@ -21,7 +21,7 @@ const myStore = mainStore();
 
 const router = useRouter();
 
-const username = ref('');
+const username = ref('Maisam');
 const urlInput = ref('');
 
 const createLobby = () => {
@@ -30,9 +30,7 @@ const createLobby = () => {
     return;
   } else {
     myStore.socket.emit('lobby and admin creation', username.value);
-    myStore.socket.on('user receive your lobby', (paramLobby) => {
-      myStore.lobby = paramLobby;
-    });
+    myStore.updateLobby();
     router.push(`/gameroomhost`);
   }
 };
@@ -41,8 +39,7 @@ const enterLobby = () => {
     alert('Geben Sie bitte Ihren Namen ein.');
     return;
   } else {
-    myStore.socket.emit('connected as player', myStore.socket.id, 'Player', username.value);
-    myStore.socket.emit('send me the lobby', urlInput.value);
+    myStore.socket.emit('entering the lobby', username.value, urlInput.value);
     myStore.updateLobby();
     router.push(`/gameroomplayer`);
   }

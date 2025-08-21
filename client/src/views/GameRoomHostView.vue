@@ -1,13 +1,57 @@
 <template>
   <main class="flex flex-col gap-[4rem]">
-    <div>settings</div>
-    <div>categries</div>
+    <div class="flex justify-evenly">
+      <div>
+        <p>Timelimit</p>
+        <div class="mt-2 flex gap-3">
+          <img src="icons/counter.svg" alt="decrease button" class="w-4 rotate-180" />
+          <p>01:05</p>
+          <img src="icons/counter.svg" alt="increase button" class="w-4" />
+        </div>
+      </div>
+      <div>
+        <p>Rounds</p>
+        <div class="mt-2 flex gap-3">
+          <img src="icons/counter.svg" alt="decrease button" class="w-4 rotate-180" />
+          <p>5</p>
+          <img src="icons/counter.svg" alt="increase button" class="w-4" />
+        </div>
+      </div>
+      <div>
+        <p>Who checks the words?</p>
+        <div class="mt-2 flex justify-evenly gap-3">
+          <img src="icons/players.svg" alt="players button" class="w-8" />
+          <img src="icons/artificial_intelligence.svg" alt="ai button" class="w-8" />
+        </div>
+      </div>
+    </div>
+    <div class="text-left">
+      <p>Categories:</p>
+      <form class="mt-2 flex gap-4">
+        <div>
+          <input type="checkbox" id="name" name="name" value="Name" />
+          <label for="name">Name</label>
+        </div>
+        <div>
+          <input type="checkbox" id="city" name="city" value="City" />
+          <label for="city">City</label>
+        </div>
+        <div>
+          <input type="checkbox" id="food" name="food" value="Food" />
+          <label for="food">Food</label>
+        </div>
+        <div>
+          <input type="checkbox" id="sport" name="sport" value="Sport" />
+          <label for="sport">Sport</label>
+        </div>
+      </form>
+    </div>
     <table>
       <tbody>
         <tr v-for="player in myStore.lobby.players" :key="player.id" class="flex items-center">
-          <td><img src="icons/Admin.svg" class="w-8"/></td>
+          <td><img v-show="player.isAdmin" src="icons/Admin.svg" alt="admin" class="w-8" /></td>
           <td class="name-data" colspan="2">{{ player.name }}</td>
-          <td><button class="kick-button" @click="kick(player.id)">Kick</button></td>
+          <td><button v-show="!player.isAdmin" class="kick-button" @click="kick(player.id)">Kick</button></td>
         </tr>
       </tbody>
     </table>
@@ -47,7 +91,7 @@
     </div> -->
     <div class="flex justify-between">
       <button @click="leaving()">Leave the Lobby</button>
-      <button>Invite Players</button>
+      <button @click="copyContent()">Invite Players</button>
       <button @click="startTheGame()">Start the Game</button>
     </div>
   </main>
@@ -64,25 +108,17 @@ const myStore = mainStore();
 const router = useRouter();
 
 const copyContent = async () => {
-  let text = document.getElementById('link').innerText;
+  let url = myStore.lobby.url;
   try {
-    await navigator.clipboard.writeText(text);
-    showNotification();
+    await navigator.clipboard.writeText(url);
+    window.alert('The url is copied!');
   } catch (err) {
     console.error('Failed to copy: ', err);
   }
 };
 
-const showNotification = () => {
-  const notificationBox = document.getElementById('notification-box');
-  notificationBox.style.display = 'block';
-  setTimeout(() => {
-    notificationBox.style.display = 'none';
-  }, 2000);
-};
-
 const leaving = () => {
-  myStore.socket.emit('Im leaving, remove the lobby', myStore.lobby.url);
+  myStore.socket.emit('im leaving the lobby', myStore.lobby.url);
   myStore.clearStore();
   window.location = 'http://localhost:8080/';
 };
@@ -97,8 +133,10 @@ myStore.socket.on('navigate to letter', (paramLetter) => {
 });
 
 const kick = (playerId) => {
-  myStore.socket.emit('kick the player', myStore.lobby.url, playerId);
+  myStore.socket.emit('remove the player from lobby', myStore.lobby.url, playerId);
 };
+
+myStore.updateLobby();
 </script>
 
 <style scoped>
@@ -106,24 +144,52 @@ button {
   padding: 15px 30px;
 }
 
-.kick-button {
-  padding: 10px 45px;
+[type='checkbox'] {
+  opacity: 0;
+}
+[type='checkbox'] + label {
+  padding-left: 25px;
+  cursor: pointer;
+  position: relative;
+}
+[type='checkbox'] + label::before {
+  content: '';
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 18px;
+  height: 18px;
+  outline: 2px solid #EAEAEA;
+  background: none;
+}
+[type='checkbox']:checked + label::after {
+content: '';
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 18px;
+  height: 18px;
+  background-image: url(icons/check_mark.svg);
+  background-size: contain;
 }
 
-table{
+table {
   border-collapse: collapse;
   width: 100%;
 }
-tr{
+tr {
   border-bottom: 3px solid #eaeaea;
 }
-td{
+td {
   width: 20%;
   padding: 10px;
   padding-left: 2rem;
 }
+.kick-button {
+  padding: 10px 45px;
+}
 
-.name-data{
+.name-data {
   width: 60%;
   text-align: left;
 }
