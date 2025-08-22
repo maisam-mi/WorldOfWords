@@ -1,53 +1,20 @@
 <template>
-  <div class="outer-box grid h-full items-center justify-center py-3">
-    <CountdownComp />
-    <div class="flex h-[60vh] w-[85vw] justify-center">
-      <div class="flex h-[100%] w-[75%] flex-col justify-start text-lg">
-        <h2 class="mx-2 text-white">Land</h2>
-        <input
-          v-model="labels[0].label"
-          type="text"
-          class="bg-transparent m-2 mb-4 h-20 rounded-md pl-2 text-white"
-          :style="{ border: '2px solid white' }"
-          :placeholder="letterPH"
-        />
-        <h2 class="mx-2 text-white">Tier</h2>
-        <input
-          v-model="labels[1].label"
-          type="text"
-          class="bg-transparent m-2 mb-4 rounded-md pl-2 text-white"
-          :style="{ border: '2px solid white' }"
-          :placeholder="letterPH"
-        />
-        <h2 class="mx-2 text-white">Fluss</h2>
-        <input
-          v-model="labels[2].label"
-          type="text"
-          class="bg-transparent m-2 mb-4 h-10 rounded-md pl-2 text-white"
-          :style="{ border: '2px solid white' }"
-          :placeholder="letterPH"
-        />
-        <h2 class="mx-2 text-white">Name</h2>
-        <input
-          v-model="labels[3].label"
-          type="text"
-          class="bg-transparent m-2 mb-4 h-10 rounded-md pl-2 text-white"
-          :style="{ border: '2px solid white' }"
-          :placeholder="letterPH"
-        />
-        <h2 class="mx-2 text-white">Arbeit</h2>
-        <input
-          v-model="labels[4].label"
-          type="text"
-          class="bg-transparent m-2 mb-3 h-10 rounded-md pl-2 text-white"
-          :style="{ border: '2px solid white' }"
-          :placeholder="letterPH"
-        />
-      </div>
+  <main class="flex flex-col items-center gap-5">
+    <div class="flex gap-10 mt-10">
+      <p>A</p>
+      <p>01:10</p>
     </div>
-    <div></div>
-    <div></div>
-  </div>
+    <div class="flex flex-col gap-5">
+      <input
+        v-for="category in categories"
+        :key="category"
+        type="text"
+        :name="category"
+        :placeholder="category"
+      />
+    </div>
+    <button @click="leaving()">Leave the Lobby</button>
+  </main>
 </template>
 <script setup>
 import mainStore from '@/stores/store.js';
@@ -59,9 +26,15 @@ console.log('Step 4');
 
 const myStore = mainStore();
 
+const categories = ['Name', 'Animal', 'Country', 'Food'];
+
 const router = useRouter();
 
-const letterPH = myStore.letter + '..';
+const leaving = () => {
+  myStore.socket.emit('im leaving the lobby', myStore.lobby.url);
+  myStore.clearStore();
+  window.location = 'http://localhost:8080/';
+};
 
 const labels = ref([
   {
@@ -91,45 +64,24 @@ const labels = ref([
   },
 ]);
 
-setTimeout(() => {
-  myStore.wordlist = { userid: myStore.socket.id, labels: labels.value };
-  myStore.socket.emit('take my words for this round!', myStore.lobby.url, myStore.wordlist);
-  router.push('/result');
-}, 20000);
+// the time comes from myStore.lobby.timelimit
+// setTimeout(() => {
+//   myStore.wordlist = { userid: myStore.socket.id, labels: labels.value };
+//   myStore.socket.emit('take my words for this round!', myStore.lobby.url, myStore.wordlist);
+//   router.push('/result');
+// }, 20000);
+
+myStore.updateLobby();
 </script>
 
 <style scoped>
-input {
-  height: 20vh;
+button {
+  padding: 15px 30px;
+  margin-top: 3rem;
 }
 
-input:focus-visible {
-  outline: none;
-}
-
-@media (max-width: 640px) {
-  .outer-box {
-    display: grid;
-    align-items: center;
-    height: 100vh;
-    width: 100vw;
-    background-image: url('../assets/images/BackgroundGameRoom.webp');
-    background-repeat: repeat;
-    background-size: cover;
-    background-position: left;
-  }
-}
-
-@media (min-width: 641px) {
-  .outer-box {
-    display: grid;
-    align-items: center;
-    height: 100vh;
-    width: 100vw;
-    background-image: url('../assets/images/BackgroundLetterGenerator.webp');
-    background-repeat: repeat;
-    background-size: cover;
-    background-position: center;
-  }
+p{
+  font-size: 2rem;
+  padding: 0rem 2.5rem;
 }
 </style>

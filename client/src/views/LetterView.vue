@@ -1,18 +1,23 @@
 <template>
-  <div class="outer-box bg-cover bg-center">
-    <CountdownLetterComp />
-    <div class="mt-5"><img :src="`/letters/${myStore.letter}.svg`" alt="" /></div>
-    <div></div>
-    <div></div>
-
-    <div></div>
-  </div>
+  <main class="flex flex-col items-center">
+    <p>Round {{ myStore.lobby.rounds.length }}</p>
+    <p class="letter">{{ myStore.lobby.rounds[myStore.lobby.rounds.length - 1] }}</p>
+    <table>
+      <tbody>
+        <tr v-for="player in bests" :key="player.id" class="flex items-center justify-between">
+          <td>{{ bests.indexOf(player) + 1 }}</td>
+          <td class="name-data" colspan="2">{{ player.name }}</td>
+          <td>{{ player.playerPoints }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </main>
 </template>
 
 <script setup>
 import mainStore from '@/stores/store.js';
 import { useRouter } from 'vue-router';
-import CountdownLetterComp from '../components/CountdownLetterComp.vue';
+import { ref } from 'vue';
 
 console.log('Step 3');
 
@@ -20,49 +25,30 @@ const myStore = mainStore();
 
 const router = useRouter();
 
+const bests = [];
+
+// here comes the codes for storing top 3 bests in variable bests. 
+
 setTimeout(() => {
   router.push('/game');
 }, 5000);
 </script>
 
 <style scoped>
-@media (max-width: 640px) {
-  .outer-box {
-    display: grid;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    width: 100vw;
-    background-image: url('../assets/images/MBackground.webp');
-    background-repeat: repeat;
-  }
+.letter{
+  font-size: 20rem;
 }
 
-@media (min-width: 641px) {
-  .outer-box {
-    display: grid;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    width: 100vw;
-    background-image: url('../assets/images/BackgroundLetterGenerator.webp');
-    background-repeat: repeat;
-  }
+table {
+  border-collapse: collapse;
+  width: 25%;
 }
-
-.lobby {
-  background: rgb(53, 53, 53);
-  opacity: 60%;
-  height: 50vh;
-  width: 50vw;
-  margin: auto;
-  padding: 5%;
-  border-radius: 4em 4em 4em 4em;
+td {
+  width: 25%;
+  padding: 5px 0px;
 }
-
-h1 {
-  font-size: xx-large;
-  color: #707070;
-  margin: auto;
+.name-data {
+  width: 40%;
+  text-align: left;
 }
 </style>

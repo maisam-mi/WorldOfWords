@@ -10,7 +10,7 @@ export const createLobby = async (playerId, playerName, lobbies) => {
     timelimit: null, // I have to think about
     countOfRounds: 1,
     selfcheck: true,
-    categories: [],
+    categories: ['Name', 'Animal', 'Country', 'Food'],
     players: [
       {
         id: playerId,
