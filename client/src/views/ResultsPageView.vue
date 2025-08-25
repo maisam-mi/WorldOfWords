@@ -1,78 +1,41 @@
 <template>
-  <div class="outer-box grid h-[100vh] items-center justify-center">
-    <div class="mx-auto h-[45%]"></div>
-    <h1 class="block text-3xl md:hidden">Ergebnisse</h1>
+  <main class="flex flex-col gap-[6rem]">
+    <div>
+      <div class="flex justify-center gap-[5rem]">
+        <div class="mt-20">
+          <p class="rank">2</p>
+          <p>Rana 30 points</p>
+        </div>
+        <div>
+          <p class="rank">1</p>
+          <p>Maisam 50 points</p>
+        </div>
 
-    <div
-      class="space-between mx-auto hidden grid-flow-col items-end justify-end gap-12 text-xl md:flex"
-    >
-      <div v-if="myStore.lobby.result.length > 1" class="h-[10vh] text-center">
-        <img src="../assets/images/Num2.svg" class="row-start-2" alt="" />
-
-        <p class="text-[#A1A1A1]" style="text-align: center">{{ myStore.lobby.result[1].name }}</p>
-        <label class="text-white"
-          >Punkte:
-          {{ myStore.lobby.result[1].points }}
-        </label>
-      </div>
-      <div class="text-center">
-        <img src="../assets/images/Num1.svg" class="row-end-3" alt="" />
-
-        <p class="text-[#B19467]" style="text-align: center">
-          {{ myStore.lobby.result[0].name }}
-        </p>
-        <label class="text-white">Punkte: {{ myStore.lobby.result[0].points }}</label>
-      </div>
-      <div v-if="myStore.lobby.result.length > 2" class="h-[10vh] text-center">
-        <img src="../assets/images/Num3.svg" class="row-start-2" alt="" />
-        <p class="text-[#8B6222]" style="text-align: center">
-          {{ myStore.lobby.result[2].name }}
-        </p>
-        <label class="text-white">Punkte: {{ myStore.lobby.result[2].points }}</label>
-      </div>
-    </div>
-
-    <div
-      class="space-between mx-auto grid-flow-col flex-col items-end justify-end text-2xl md:hidden"
-    >
-      <div class="mb-8 flex items-center gap-4">
-        <img src="../assets/images/Num1.svg" class="w-32" alt="" />
-        <div class="flex-row">
-          <p class="text-[#B19467]" style="text-align: center">
-            {{ myStore.lobby.result[0].name }}
-          </p>
-          <label class="text-white">Punkte: {{ myStore.lobby.result[0].points }}</label>
+        <div class="mt-40">
+          <p class="rank">3</p>
+          <p>Anar 20 points</p>
         </div>
       </div>
-
-      <div v-if="myStore.lobby.result.length > 1" class="my-8 flex items-center gap-4">
-        <img src="../assets/images/Num2.svg" class="w-32" alt="" />
-        <div class="flex-row">
-          <p class="text-[#A1A1A1]" style="text-align: center">
-            {{ myStore.lobby.result[1].name }}
-          </p>
-          <label class="text-white">Punkte: {{ myStore.lobby.result[1].points }}</label>
-        </div>
-      </div>
-
-      <div v-if="myStore.lobby.result.length > 2" class="my-8 flex items-center gap-4">
-        <img src="../assets/images/Num3.svg" class="w-32" alt="" />
-        <div class="flex-row">
-          <p class="text-[#8B6222]" style="text-align: center">
-            {{ myStore.lobby.result[2].name }}
-          </p>
-          <label class="text-white">Punkte: {{ myStore.lobby.result[2].points }}</label>
-        </div>
+      <div class="flex justify-between">
+        <button @click="leaving()">Leave the Lobby</button>
+        <button @click="changeResult()">Result List</button>
+        <button @click="backToLobby()">Back to the Lobby</button>
       </div>
     </div>
-
-    <div class="image-container flex items-center justify-center" @click="restartGame()">
-      <img src="../assets/images/RestartButton.svg" alt="" class="normal-image" />
-      <img src="../assets/images/RestartButton2.svg" alt="" class="hover-image" />
+    <div>
+      <p>Result List</p>
+      <table>
+        <tbody>
+          <tr v-for="player in bests" :key="player.id" class="flex items-center justify-between">
+            <td>{{ bests.indexOf(player) + 1 }}</td>
+            <td class="name-data" colspan="2">{{ player.name }}</td>
+            <td>{{ player.playerPoints }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <button @click="changeResult()">Back to Result</button>
     </div>
-
-    <div></div>
-  </div>
+  </main>
 </template>
 <script setup>
 import mainStore from '@/stores/store.js';
@@ -101,58 +64,11 @@ myStore.socket.on('the lobby is removed', (message) => {
 </script>
 
 <style scoped>
-@media (max-width: 640px) {
-  .outer-box {
-    display: grid;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    width: 100vw;
-    background-image: url('../assets/images/Background.webp');
-    background-repeat: repeat;
-    background-size: cover;
-    background-position: center;
-  }
+button {
+  padding: 15px 30px;
 }
 
-@media (min-width: 641px) {
-  .outer-box {
-    display: grid;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    width: 100vw;
-    background-image: url('../assets/images/Result.webp');
-    background-repeat: repeat;
-    background-size: cover;
-    background-position: center;
-  }
-}
-h1 {
-  font-size: xx-large;
-  color: #d8b37c;
-  margin: auto;
-}
-
-.image-container {
-  position: relative;
-}
-
-.normal-image,
-.hover-image {
-  position: absolute;
-  transition: opacity 0.3s ease-in-out;
-}
-
-.hover-image {
-  opacity: 0;
-}
-
-.image-container:hover .normal-image {
-  opacity: 0;
-}
-
-.image-container:hover .hover-image {
-  opacity: 1;
+.rank {
+  font-size: 8rem;
 }
 </style>
