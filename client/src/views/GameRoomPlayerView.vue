@@ -48,8 +48,6 @@ import { useRouter } from 'vue-router';
 const myStore = mainStore();
 const router = useRouter();
 
-console.log(myStore.lobby);
-
 const leaving = () => {
   myStore.socket.emit('im leaving the lobby', myStore.lobby.url);
   myStore.clearStore();

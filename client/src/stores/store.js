@@ -53,7 +53,6 @@ const mainStore = defineStore(
 
     const getResult = () => {
       socket.on('give me the result', (paramLobby) => {
-        console.log('My lobby: ', paramLobby);
         lobby.value = paramLobby;
       });
     };

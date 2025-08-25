@@ -1,6 +1,6 @@
 <template>
-  <main class="flex flex-col gap-[6rem]">
-    <div>
+  <main>
+    <div v-if="!showWholeResult" class="flex flex-col gap-[6rem]">
       <div class="flex justify-center gap-[5rem]">
         <div class="mt-20">
           <p class="rank">2</p>
@@ -18,27 +18,28 @@
       </div>
       <div class="flex justify-between">
         <button @click="leaving()">Leave the Lobby</button>
-        <button @click="changeResult()">Result List</button>
+        <button @click="showWholeResult = !showWholeResult">Result List</button>
         <button @click="backToLobby()">Back to the Lobby</button>
       </div>
     </div>
-    <div>
+    <div v-else class="flex flex-col gap-[6rem] items-center">
       <p>Result List</p>
       <table>
         <tbody>
-          <tr v-for="player in bests" :key="player.id" class="flex items-center justify-between">
-            <td>{{ bests.indexOf(player) + 1 }}</td>
+          <tr v-for="player in ranks" :key="player" class="flex items-center justify-between">
+            <td>{{ ranks.indexOf(player) + 1 }}</td>
             <td class="name-data" colspan="2">{{ player.name }}</td>
-            <td>{{ player.playerPoints }}</td>
+            <td>{{ player.points }}</td>
           </tr>
         </tbody>
       </table>
-      <button @click="changeResult()">Back to Result</button>
+      <button @click="showWholeResult = !showWholeResult">Back to Result</button>
     </div>
   </main>
 </template>
 <script setup>
 import mainStore from '@/stores/store.js';
+import { ref } from 'vue';
 
 const myStore = mainStore();
 
@@ -56,11 +57,36 @@ const restartGame = () => {
   }
 };
 
+const showWholeResult = ref(false);
+
 myStore.socket.on('the lobby is removed', (message) => {
   myStore.clearStore();
   console.log(message);
   window.location = 'http://localhost:8080/';
 });
+
+const ranks = [
+  {
+    rank: 1,
+    name: 'Maisam',
+    points: 50,
+  },
+  {
+    rank: 2,
+    name: 'Rana',
+    points: 30,
+  },
+  {
+    rank: 3,
+    name: 'Anar',
+    points: 20,
+  },
+  {
+    rank: 4,
+    name: 'Oktalon',
+    points: 15,
+  },
+]
 </script>
 
 <style scoped>
@@ -70,5 +96,18 @@ button {
 
 .rank {
   font-size: 8rem;
+}
+
+table {
+  border-collapse: collapse;
+  width: 25%;
+}
+td {
+  width: 25%;
+  padding: 5px 0px;
+}
+.name-data {
+  width: 40%;
+  text-align: left;
 }
 </style>

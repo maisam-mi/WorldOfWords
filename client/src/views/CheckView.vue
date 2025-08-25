@@ -33,8 +33,6 @@ import { useRouter } from 'vue-router';
 const myStore = mainStore();
 const router = useRouter();
 
-console.log(myStore.lobby);
-
 const categories = ['Name', 'Animal', 'Country', 'Food'];
 
 const players = [
