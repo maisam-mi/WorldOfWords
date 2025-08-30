@@ -51,6 +51,7 @@ io.on('connection', (socket) => {
       io.to(lobby.url).emit('user receive your lobby', lobby); // Here the whole lobby is sent to player.
     } else {
       console.log(socket.id, ': this user is not admin of the lobby.');
+      socket.emit('you are not the admin of this lobby');
     }
   });
 
@@ -69,6 +70,42 @@ io.on('connection', (socket) => {
       lobby = await methods.removePlayerFromLobby(lobbyUrl, socket.id, lobbies);
       // send the changes to remained players
       io.to(lobby.url).emit('user receive your lobby', lobby); // Here the whole lobby is sent to player.
+    }
+  });
+
+  // through admins request the game starts
+  socket.on('start the game', async (lobbyUrl) => {
+    // to check whether this is the admin
+    let lobby = lobbies.find((lobby) => lobby.url == lobbyUrl);
+    const admin = lobby.players.find((player) => player.id == socket.id);
+    if (admin.isAdmin) {
+      // a letter is randomly chosen.
+      let letterAccepted = false;
+      let letter = methods.generateRandomLetter();
+      while (!letterAccepted){
+        if(lobby.rounds.find((round) => round == letter))
+        {
+          letter = methods.generateRandomLetter();
+        }
+        else
+        {
+          letterAccepted = true;
+          lobby.rounds.push(letter);
+        }
+      }
+      // the letter is added to the lobby and the first round is initated. 
+      lobby.players.map((player) => {
+        player.progress.push({
+          round: letter,
+          words: methods.createWords(lobby.categories),
+          roundPoints: 0,
+        })
+      });
+      // send the changes to all players
+      io.to(lobby.url).emit('navigate to letter', lobby);
+    } else {
+      console.log(socket.id, ': this user is not admin of the lobby.');
+      socket.emit('you are not the admin of this lobby');
     }
   });
 

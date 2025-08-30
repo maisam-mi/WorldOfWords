@@ -55,40 +55,6 @@
         </tr>
       </tbody>
     </table>
-    <!-- <div
-      class="bord mx-auto mt-[-12%] hidden h-10 w-[40vw] rounded-full border-2 border-white md:block"
-    >
-      <label class="text-l mt-[5px] pl-6 text-start text-white" id="link">
-        {{ myStore.lobby.url }}
-      </label>
-      <div class="flex justify-end">
-        <button
-          @click="copyContent()"
-          class="copy absolute mt-[-30px] h-[39px] w-[9.2vw] rounded-full border-2 border-white text-sm"
-        >
-          Copy Link
-        </button>
-      </div>
-
-      <div class="notification-box" id="notification-box">Link copied!</div>
-    </div> 
-    <div
-      class="bord mx-auto mt-[-12%] block h-10 w-[90vw] rounded-full border-2 border-white md:hidden"
-    >
-      <label class="text-l mt-[5px] pl-6 text-start text-white" id="link">
-        {{ myStore.lobby.url }}
-      </label>
-      <div class="flex justify-end">
-        <button
-          @click="copyContent()"
-          class="copy absolute mt-[-30px] h-[39px] w-[10vw] rounded-full border-2 border-white text-sm"
-        >
-          <img src="../../src/assets/images/copy.png" class="mx-auto w-7" alt="" />
-        </button>
-      </div>
-
-      <div class="notification-box" id="notification-box">Link copied!</div>
-    </div> -->
     <div class="flex justify-between">
       <button @click="leaving()">Leave the Lobby</button>
       <button @click="copyContent()">Invite Players</button>
@@ -127,8 +93,8 @@ const startTheGame = () => {
   myStore.socket.emit('start the game', myStore.lobby.url);
 };
 
-myStore.socket.on('navigate to letter', (paramLetter) => {
-  myStore.letter = paramLetter;
+myStore.socket.on('navigate to letter', (paramlobby) => {
+  myStore.lobby = paramlobby;
   router.replace('/letter');
 });
 

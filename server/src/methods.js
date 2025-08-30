@@ -62,6 +62,20 @@ export const generateRandomLetter = () => {
   return alphabet[randomIndex];
 };
 
+export const createWords = (categories) => {
+  let words = [];
+
+  categories.map((paramCategory) => {
+    words.push({
+      category: paramCategory,
+      value: '',
+      wordPoints: 0,
+    });
+  });
+
+  return words;
+};
+
 const genAI = new GoogleGenerativeAI(process.env.API_KEY);
 
 export const checkAnswer = async (label, category, letter) => {
