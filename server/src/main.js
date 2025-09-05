@@ -14,7 +14,7 @@ const io = new Server(server, {
 });
 
 let lobbies = [];
-let categories = [];
+let categories = ['Name', 'Animal', 'Country', 'Food'];
 
 // the Client is connected to server!
 io.on('connection', (socket) => {
@@ -82,30 +82,55 @@ io.on('connection', (socket) => {
       // a letter is randomly chosen.
       let letterAccepted = false;
       let letter = methods.generateRandomLetter();
-      while (!letterAccepted){
-        if(lobby.rounds.find((round) => round == letter))
-        {
+      while (!letterAccepted) {
+        if (lobby.rounds.find((round) => round == letter)) {
           letter = methods.generateRandomLetter();
-        }
-        else
-        {
+        } else {
           letterAccepted = true;
           lobby.rounds.push(letter);
         }
       }
-      // the letter is added to the lobby and the first round is initated. 
+      // the letter is added to the lobby and the first round is initated.
       lobby.players.map((player) => {
         player.progress.push({
           round: letter,
           words: methods.createWords(lobby.categories),
           roundPoints: 0,
-        })
+        });
       });
       // send the changes to all players
       io.to(lobby.url).emit('navigate to letter', lobby);
     } else {
       console.log(socket.id, ': this user is not admin of the lobby.');
       socket.emit('you are not the admin of this lobby');
+    }
+  });
+
+  // every round the words are recieved from client.
+  socket.on('take my words for this round', async (lobbyUrl, paramRound, paramWords) => {
+    // To check whether this client belongs to the lobby.
+    let lobby = lobbies.find((el) => el.url === lobbyUrl);
+    if (!lobby) {
+      console.log(socket.id, ': the lobby is not found.');
+      socket.emit('the lobby is not found');
+    } else {
+      let player = lobby.players.find((player) => player.id == socket.id);
+      // If client dosnt belong to the lobby, it will be leaded to the startpage.
+      if (!player) {
+        console.log(socket.id, ': the client dosnt belong to the lobby.');
+        socket.emit('you are not a player of this lobby');
+      }
+      // the client is found in the lobby.
+      else {
+        // store his words in lobby.
+        let words = player.progress.find((el) => el.round == paramRound).words;
+        for (let index = 0; index < words.length; index++) {
+          words[index].value = paramWords.find(
+            (cate) => cate.category == words[index].category,
+          ).label;
+        }
+        socket.emit('user receive your lobby', lobby);
+      }
     }
   });
 

@@ -14,36 +14,24 @@ const mainStore = defineStore(
 
     const letter = ref('');
 
-    const wordlist = ref({
-      userid: socket.id,
-      labels: [
-        {
-          category: 'Land',
-          label: '',
-          points: 0,
-        },
-        {
-          category: 'Tier',
-          label: '',
-          points: 0,
-        },
-        {
-          category: 'Fluss',
-          label: '',
-          points: 0,
-        },
-        {
-          category: 'Name',
-          label: '',
-          points: 0,
-        },
-        {
-          category: 'Arbeit',
-          label: '',
-          points: 0,
-        },
-      ],
-    });
+    const inputWords = ref([
+      {
+        category: 'Name',
+        label: '',
+      },
+      {
+        category: 'Animal',
+        label: '',
+      },
+      {
+        category: 'Country',
+        label: '',
+      },
+      {
+        category: 'Food',
+        label: '',
+      },
+    ]);
 
     const updateLobby = () => {
       socket.on('user receive your lobby', (paramLobby) => {
@@ -65,36 +53,24 @@ const mainStore = defineStore(
       lobby.value = null;
       url.value = null;
       letter.value = '';
-      wordlist.value = {
-        userid: socket.id,
-        labels: [
-          {
-            category: 'Land',
-            label: '',
-            points: 0,
-          },
-          {
-            category: 'Tier',
-            label: '',
-            points: 0,
-          },
-          {
-            category: 'Fluss',
-            label: '',
-            points: 0,
-          },
-          {
-            category: 'Name',
-            label: '',
-            points: 0,
-          },
-          {
-            category: 'Arbeit',
-            label: '',
-            points: 0,
-          },
-        ],
-      };
+      inputWords.value = [
+        {
+          category: 'Name',
+          label: '',
+        },
+        {
+          category: 'Animal',
+          label: '',
+        },
+        {
+          category: 'Country',
+          label: '',
+        },
+        {
+          category: 'Food',
+          label: '',
+        },
+      ];
     };
     // #endregion
 
@@ -102,7 +78,7 @@ const mainStore = defineStore(
       socket,
       lobby,
       letter,
-      wordlist,
+      inputWords,
       url,
       updateLobby,
       getResult,

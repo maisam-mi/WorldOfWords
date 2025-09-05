@@ -105,7 +105,7 @@
     }
   });
   // checking the words
-  socket.on('take my words for this round!', async (url, wordlist) => {
+  socket.on('take my words for this round!', async (url, words) => {
     let lobby = lobbies.find((el) => el.url === url);
 
     if (!lobby) {
@@ -115,7 +115,7 @@
 
     socket.join(lobby.url);
     if (socket.rooms.has(lobby.url)) {
-      lobby.rounds[0].wordLists.push(wordlist);
+      lobby.rounds[0].wordLists.push(words);
       //#region  Jedes eingegebene Wort überprüfen
       for (let el of lobby.rounds[0].wordLists) {
         for (let i = 0; i < el.labels.length; i++) {

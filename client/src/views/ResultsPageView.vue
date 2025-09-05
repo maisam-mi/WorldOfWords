@@ -45,6 +45,12 @@ const myStore = mainStore();
 
 console.log('Step 5');
 
+myStore.updateLobby();
+
+console.log(myStore.inputWords);
+
+console.log(myStore.lobby);
+
 const restartGame = () => {
   if (myStore.socket.id === myStore.lobby.admin.id) {
     myStore.socket.emit('Im leaving, remove the lobby', myStore.lobby.url);

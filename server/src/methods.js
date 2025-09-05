@@ -76,6 +76,12 @@ export const createWords = (categories) => {
   return words;
 };
 
+export const storeInputWords = (words, paramWords) => {
+  for (let index = 0; index < words.length; index++) {
+    words[index].value = paramWords.find((cate) => cate.category == words[index].category).label;
+  }
+};
+
 const genAI = new GoogleGenerativeAI(process.env.API_KEY);
 
 export const checkAnswer = async (label, category, letter) => {

@@ -1,16 +1,17 @@
 <template>
   <main class="flex flex-col items-center gap-5">
-    <div class="flex gap-10 mt-10">
+    <div class="mt-10 flex gap-10">
       <p>A</p>
       <p>01:10</p>
     </div>
     <div class="flex flex-col gap-5">
       <input
-        v-for="category in categories"
-        :key="category"
+        v-for="input in myStore.inputWords"
+        :key="input"
         type="text"
-        :name="category"
-        :placeholder="category"
+        :name="input.category"
+        :placeholder="input.category"
+        v-model="input.label"
       />
     </div>
     <button @click="leaving()">Leave the Lobby</button>
@@ -27,6 +28,8 @@ console.log('Step 4');
 const myStore = mainStore();
 
 const categories = ['Name', 'Animal', 'Country', 'Food'];
+
+
 
 const router = useRouter();
 
@@ -64,12 +67,23 @@ const labels = ref([
   },
 ]);
 
-// the time comes from myStore.lobby.timelimit
-// setTimeout(() => {
-//   myStore.wordlist = { userid: myStore.socket.id, labels: labels.value };
-//   myStore.socket.emit('take my words for this round!', myStore.lobby.url, myStore.wordlist);
-//   router.push('/result');
-// }, 20000);
+myStore.socket.on('the lobby is not found', () => {
+  myStore.clearStore();
+  window.alert('The lobby dosnt exist, you can enter a existed lobby.');
+  window.location = 'http://localhost:8080/';
+});
+
+myStore.socket.on('you are not a player of this lobby', () => {
+  myStore.clearStore();
+  window.alert('You are not a player of this lobby, so we lead you to startpage, so you can enter a lobby.');
+  window.location = 'http://localhost:8080/';
+});
+
+// Explanation
+setTimeout(() => {
+  myStore.socket.emit('take my words for this round', myStore.lobby.url, myStore.lobby.rounds[myStore.lobby.rounds.length - 1], myStore.inputWords);
+  router.push('/result');
+}, 10000);
 
 myStore.updateLobby();
 </script>
@@ -80,7 +94,7 @@ button {
   margin-top: 3rem;
 }
 
-p{
+p {
   font-size: 2rem;
   padding: 0rem 2.5rem;
 }
