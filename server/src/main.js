@@ -19,6 +19,7 @@ let categories = ['Name', 'Animal', 'Country', 'Food'];
 // the Client is connected to server!
 io.on('connection', (socket) => {
   console.log(socket.id, 'step 1: user attended the game.');
+  io.emit('receive the available categories', categories);
 
   // 1. a lobby is created and the client becomes its admin.
   socket.on('lobby and admin creation', async (playerName) => {
@@ -130,6 +131,55 @@ io.on('connection', (socket) => {
           ).label;
         }
         socket.emit('user receive your lobby', lobby);
+      }
+    }
+  });
+
+  // its been decided for checking the words, which client should see what?
+  socket.on('decide my next view', (lobbyUrl) => {
+    let lobby = lobbies.find((el) => el.url === lobbyUrl);
+    if (!lobby) {
+      console.log(socket.id, ': the lobby is not found.');
+      socket.emit('the lobby is not found');
+    } else {
+      const admin = lobby.players.find((player) => player.id == socket.id);
+      if (admin.isAdmin) {
+        socket.emit('you go to check');
+      } else {
+        socket.emit('you go to review');
+      }
+    }
+  });
+
+  // the client (admin) accepts, the the given word in parameter is correct.
+  socket.on('calculate Points', (lobbyUrl, wordsOwnerId, wordsCategory) => {
+    let lobby = lobbies.find((el) => el.url === lobbyUrl);
+    if (!lobby) {
+      console.log(socket.id, ': the lobby is not found.');
+      socket.emit('the lobby is not found');
+    } else {
+      const admin = lobby.players.find((player) => player.id == socket.id);
+      if (admin.isAdmin) {
+        const player = lobby.players.find((player) => player.id == wordsOwnerId);
+        const progress = player.progress;
+        const round = progress[lobby.rounds.length - 1];
+        const word = round.words.find((word) => word.category == wordsCategory);
+        if(word.wordPoints == 0)
+        {
+          word.wordPoints += 10;
+          round.roundPoints += 10;
+          player.playerPoints += 10;
+        }
+        else
+        {
+          word.wordPoints -= 10;
+          round.roundPoints -= 10;
+          player.playerPoints -= 10;
+        }
+        io.to(lobby.url).emit('user receive your lobby', lobby);
+      } else {
+        console.log(socket.id, ': this user is not admin of the lobby.');
+        socket.emit('you are not the admin of this lobby');
       }
     }
   });

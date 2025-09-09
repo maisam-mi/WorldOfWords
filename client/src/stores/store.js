@@ -7,6 +7,8 @@ const mainStore = defineStore(
   () => {
     const socket = io('http://localhost:3000');
 
+    const categories = ref([]);
+
     // #region private Änderung
     const lobby = ref(null);
 
@@ -32,6 +34,12 @@ const mainStore = defineStore(
         label: '',
       },
     ]);
+
+    const getCategories = () => {
+      socket.on('receive the available categories', (paramCategories) => {
+        categories.value = paramCategories;
+      });
+    }
 
     const updateLobby = () => {
       socket.on('user receive your lobby', (paramLobby) => {
@@ -80,6 +88,7 @@ const mainStore = defineStore(
       letter,
       inputWords,
       url,
+      getCategories,
       updateLobby,
       getResult,
       playerleaving,

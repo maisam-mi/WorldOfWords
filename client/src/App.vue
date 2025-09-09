@@ -4,7 +4,11 @@
   </div>
 </template>
 <script setup>
+import mainStore from '@/stores/store.js';
 import { RouterView } from 'vue-router';
+
+const store = mainStore();
+store.getCategories();
 </script>
 <style>
 /* font Mua */
