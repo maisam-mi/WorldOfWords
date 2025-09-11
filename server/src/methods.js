@@ -8,7 +8,7 @@ export const createLobby = async (playerId, playerName, lobbies) => {
   const lobby = {
     url: uuidv4(),
     timelimit: null, // I have to think about
-    countOfRounds: 1,
+    countOfRounds: 2,
     selfcheck: true,
     categories: ['Name', 'Animal', 'Country', 'Food'],
     players: [

@@ -164,14 +164,11 @@ io.on('connection', (socket) => {
         const progress = player.progress;
         const round = progress[lobby.rounds.length - 1];
         const word = round.words.find((word) => word.category == wordsCategory);
-        if(word.wordPoints == 0)
-        {
+        if (word.wordPoints == 0) {
           word.wordPoints += 10;
           round.roundPoints += 10;
           player.playerPoints += 10;
-        }
-        else
-        {
+        } else {
           word.wordPoints -= 10;
           round.roundPoints -= 10;
           player.playerPoints -= 10;
@@ -181,6 +178,60 @@ io.on('connection', (socket) => {
         console.log(socket.id, ': this user is not admin of the lobby.');
         socket.emit('you are not the admin of this lobby');
       }
+    }
+  });
+
+  // the client (admin) controlls, whether the players have to go to reuslt or the next round.
+  socket.on('go to result or next round', (lobbyUrl) => {
+    let lobby = lobbies.find((el) => el.url === lobbyUrl);
+    if (!lobby) {
+      console.log(socket.id, ': the lobby is not found.');
+      socket.emit('the lobby is not found');
+    } else {
+      const admin = lobby.players.find((player) => player.id == socket.id);
+      if (admin.isAdmin) {
+        if (lobby.rounds.length == lobby.countOfRounds) {
+          io.to(lobby.url).emit('the game is finished');
+        } else {
+          io.to(lobby.url).emit('go to the next round');
+        }
+      } else {
+        console.log(socket.id, ': this user is not admin of the lobby.');
+        socket.emit('you are not the admin of this lobby');
+      }
+    }
+  });
+
+  // for second and other rounds
+  socket.on('letter for the next round', async (lobbyUrl) => {
+    // to check whether this is the admin
+    let lobby = lobbies.find((lobby) => lobby.url == lobbyUrl);
+    const admin = lobby.players.find((player) => player.id == socket.id);
+    if (admin.isAdmin) {
+      // a letter is randomly chosen.
+      let letterAccepted = false;
+      let letter = methods.generateRandomLetter();
+      while (!letterAccepted) {
+        if (lobby.rounds.find((round) => round == letter)) {
+          letter = methods.generateRandomLetter();
+        } else {
+          letterAccepted = true;
+          lobby.rounds.push(letter);
+        }
+      }
+      // the letter is added to the lobby and the first round is initated.
+      lobby.players.map((player) => {
+        player.progress.push({
+          round: letter,
+          words: methods.createWords(lobby.categories),
+          roundPoints: 0,
+        });
+      });
+      // send the changes to all players
+      io.to(lobby.url).emit('navigate to letter', lobby);
+    } else {
+      console.log(socket.id, ': this user is not admin of the lobby.');
+      socket.emit('you are not the admin of this lobby');
     }
   });
 

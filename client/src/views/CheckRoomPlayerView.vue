@@ -21,7 +21,6 @@
     </table>
     <div class="flex justify-between">
       <button @click="leaving()">Cancel the game</button>
-      <button @click="goToNextRound()">Next Round</button>
     </div>
   </main>
 </template>
@@ -58,6 +57,10 @@ myStore.socket.on('the lobby is removed', () => {
 
 myStore.socket.on('you are not the admin of this lobby', () => {
   window.alert('you are not the admin of this lobby!');
+});
+
+myStore.socket.on('the game is finished', () => {
+  router.push('/result');
 });
 
 myStore.updateLobby();

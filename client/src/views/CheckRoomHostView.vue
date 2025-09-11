@@ -38,6 +38,11 @@ const calculatePoints = (wordsOwnerId, word) => {
   myStore.socket.emit('calculate Points', myStore.lobby.url, wordsOwnerId, word.category);
 }
 
+// this method sends an event to find out, where the players should be leaded. 
+const goToNextRound = () => {
+  myStore.socket.emit('go to result or next round', myStore.lobby.url);
+}
+
 const leaving = () => {
   myStore.socket.emit('im leaving the lobby', myStore.lobby.url);
   myStore.clearStore();
@@ -63,6 +68,14 @@ myStore.socket.on('the lobby is removed', () => {
 
 myStore.socket.on('you are not the admin of this lobby', () => {
   window.alert('you are not the admin of this lobby!');
+});
+
+myStore.socket.on('the game is finished', () => {
+  router.push('/result');
+});
+
+myStore.socket.on('go to the next round', () => {
+  myStore.socket.emit('letter for the next round', myStore.lobby.url);
 });
 
 myStore.updateLobby();
