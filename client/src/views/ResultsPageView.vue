@@ -39,29 +39,33 @@
 </template>
 <script setup>
 import mainStore from '@/stores/store.js';
+import { useRouter } from 'vue-router';
 import { ref } from 'vue';
 
 const myStore = mainStore();
+const router = useRouter();
 
 console.log('Step 5');
 
 myStore.updateLobby();
 
-console.log(myStore.inputWords);
-
-console.log(myStore.lobby);
-
-const restartGame = () => {
-  if (myStore.socket.id === myStore.lobby.admin.id) {
-    myStore.socket.emit('Im leaving, remove the lobby', myStore.lobby.url);
-    myStore.clearStore();
-    window.location = 'http://localhost:8080/';
-  } else {
-    myStore.socket.emit('Im leaving, overwrite the lobby', myStore.lobby.url);
-    myStore.clearStore();
-    window.location = 'http://localhost:8080/';
-  }
+const leaving = () => {
+  myStore.socket.emit('im leaving the lobby', myStore.lobby.url);
+  myStore.clearStore();
+  window.location = 'http://localhost:8080/';
 };
+
+const backToLobby = () => {
+  myStore.socket.emit('go back to lobbyroom', myStore.lobby.url);
+};
+
+myStore.socket.on('admin go to gameroomhost', () => {
+  router.push(`/gameroomhost`);
+});
+
+myStore.socket.on('player go to gameroomplayer', () => {
+  router.push(`/gameroomplayer`);
+});
 
 const showWholeResult = ref(false);
 

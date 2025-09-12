@@ -235,6 +235,20 @@ io.on('connection', (socket) => {
     }
   });
 
+  // A client wants to restart the game with the same players. 
+  socket.on('go back to lobbyroom', (lobbyUrl) => {
+    // to see who the client is, a player or admin
+    let lobby = lobbies.find((lobby) => lobby.url == lobbyUrl);
+    methods.resetLobby(lobby);
+    const admin = lobby.players.find((player) => player.id == socket.id);
+    if (admin.isAdmin) {
+      socket.emit('admin go to gameroomhost');
+    } else {
+      socket.emit('player go to gameroomplayer');
+    }
+    io.to(lobby.url).emit('user receive your lobby', lobby);
+  });
+
   // the client is disconnected to server!
   socket.on('disconnect', () => methods.removePlayer(socket.id, lobbies));
 });

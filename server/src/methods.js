@@ -8,7 +8,7 @@ export const createLobby = async (playerId, playerName, lobbies) => {
   const lobby = {
     url: uuidv4(),
     timelimit: null, // I have to think about
-    countOfRounds: 2,
+    countOfRounds: 1,
     selfcheck: true,
     categories: ['Name', 'Animal', 'Country', 'Food'],
     players: [
@@ -43,6 +43,17 @@ export const enterLobby = async (playerId, playerName, lobbies, lobbyUrl) => {
 
   // the lobby is returned.
   return lobby;
+};
+
+export const resetLobby = async (lobby) => {
+  console.log(lobby.url, 'step ?.1: lobby is reset.');
+
+  lobby.rounds = [];
+  for (let index = 0; index < lobby.players.length; index++) {
+    const player = lobby.players[index];
+    player.playerPoints = 0;
+    player.progress = [];
+  }
 };
 
 export const removePlayerFromLobby = async (lobbyUrl, playerId, lobbies) => {
