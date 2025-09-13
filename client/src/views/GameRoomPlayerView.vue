@@ -54,8 +54,7 @@ const leaving = () => {
   window.location = 'http://localhost:8080/';
 };
 
-myStore.socket.on('navigate to letter', (paramlobby) => {
-  myStore.lobby = paramlobby;
+myStore.socket.on('navigate to letter', () => {
   router.replace('/letter');
 });
 
@@ -75,7 +74,6 @@ myStore.socket.on('you are not the admin of this lobby', () => {
   window.alert('you are not the admin of this lobby!');
 });
 
-myStore.updateLobby();
 </script>
 
 <style scoped>

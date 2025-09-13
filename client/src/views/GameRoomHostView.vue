@@ -93,8 +93,7 @@ const startTheGame = () => {
   myStore.socket.emit('start the game', myStore.lobby.url);
 };
 
-myStore.socket.on('navigate to letter', (paramlobby) => {
-  myStore.lobby = paramlobby;
+myStore.socket.on('navigate to letter', () => {
   router.replace('/letter');
 });
 
@@ -102,7 +101,6 @@ const kick = (playerId) => {
   myStore.socket.emit('remove the player from lobby', myStore.lobby.url, playerId);
 };
 
-myStore.updateLobby();
 </script>
 
 <style scoped>

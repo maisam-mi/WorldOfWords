@@ -1,7 +1,7 @@
 <template>
   <main class="flex flex-col gap-[4rem]">
     <div class="text-left">
-      <p class="text-[30pt]">A</p>
+      <p class="text-[30pt]">{{ myStore.lobby.rounds[myStore.lobby.rounds.length - 1] }}</p>
       <p>Here you can see the answers of all players.</p>
       <p class="text-[13pt]">
         ! The admin chooses the right answers.
@@ -38,8 +38,7 @@ const leaving = () => {
   window.location = 'http://localhost:8080/';
 };
 
-myStore.socket.on('navigate to letter', (paramLetter) => {
-  myStore.letter = paramLetter;
+myStore.socket.on('navigate to letter', () => {
   router.replace('/letter');
 });
 
@@ -63,7 +62,6 @@ myStore.socket.on('the game is finished', () => {
   router.push('/result');
 });
 
-myStore.updateLobby();
 </script>
 
 <style scoped>

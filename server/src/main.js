@@ -100,7 +100,8 @@ io.on('connection', (socket) => {
         });
       });
       // send the changes to all players
-      io.to(lobby.url).emit('navigate to letter', lobby);
+      io.to(lobby.url).emit('user receive your lobby', lobby);
+      io.to(lobby.url).emit('navigate to letter');
     } else {
       console.log(socket.id, ': this user is not admin of the lobby.');
       socket.emit('you are not the admin of this lobby');
@@ -228,7 +229,8 @@ io.on('connection', (socket) => {
         });
       });
       // send the changes to all players
-      io.to(lobby.url).emit('navigate to letter', lobby);
+      io.to(lobby.url).emit('user receive your lobby', lobby);
+      io.to(lobby.url).emit('navigate to letter');
     } else {
       console.log(socket.id, ': this user is not admin of the lobby.');
       socket.emit('you are not the admin of this lobby');

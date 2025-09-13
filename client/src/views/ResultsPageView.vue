@@ -47,7 +47,6 @@ const router = useRouter();
 
 console.log('Step 5');
 
-myStore.updateLobby();
 
 const leaving = () => {
   myStore.socket.emit('im leaving the lobby', myStore.lobby.url);

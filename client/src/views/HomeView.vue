@@ -30,7 +30,6 @@ const createLobby = () => {
     return;
   } else {
     myStore.socket.emit('lobby and admin creation', username.value);
-    myStore.updateLobby();
     router.push(`/gameroomhost`);
   }
 };
@@ -40,7 +39,6 @@ const enterLobby = () => {
     return;
   } else {
     myStore.socket.emit('entering the lobby', username.value, urlInput.value);
-    myStore.updateLobby();
     router.push(`/gameroomplayer`);
   }
 };

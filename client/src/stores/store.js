@@ -12,10 +12,6 @@ const mainStore = defineStore(
     // #region private Änderung
     const lobby = ref(null);
 
-    const url = ref(lobby.url);
-
-    const letter = ref('');
-
     const inputWords = ref([
       {
         category: 'Name',
@@ -59,8 +55,6 @@ const mainStore = defineStore(
 
     const clearStore = () => {
       lobby.value = null;
-      url.value = null;
-      letter.value = '';
       inputWords.value = [
         {
           category: 'Name',
@@ -85,9 +79,7 @@ const mainStore = defineStore(
     return {
       socket,
       lobby,
-      letter,
       inputWords,
-      url,
       getCategories,
       updateLobby,
       getResult,

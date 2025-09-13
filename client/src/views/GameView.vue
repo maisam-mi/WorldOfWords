@@ -68,7 +68,6 @@ myStore.socket.on('you go to review', () => {
   router.push('/review');
 });
 
-myStore.updateLobby();
 </script>
 
 <style scoped>

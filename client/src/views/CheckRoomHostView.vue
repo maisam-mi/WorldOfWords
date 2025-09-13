@@ -1,7 +1,7 @@
 <template>
   <main class="flex flex-col gap-[4rem]">
     <div class="text-left">
-      <p class="text-[30pt]">A</p>
+      <p class="text-[30pt]">{{ myStore.lobby.rounds[myStore.lobby.rounds.length - 1] }}</p>
       <p>Discuss about the answers.</p>
       <p class="text-[13pt]">
         ! Click on <img src="icons/check_mark.svg" alt="check_mark" /> for right answers.
@@ -49,8 +49,7 @@ const leaving = () => {
   window.location = 'http://localhost:8080/';
 };
 
-myStore.socket.on('navigate to letter', (paramLetter) => {
-  myStore.letter = paramLetter;
+myStore.socket.on('navigate to letter', () => {
   router.replace('/letter');
 });
 
@@ -78,7 +77,6 @@ myStore.socket.on('go to the next round', () => {
   myStore.socket.emit('letter for the next round', myStore.lobby.url);
 });
 
-myStore.updateLobby();
 </script>
 
 <style scoped>

@@ -9,6 +9,8 @@ import { RouterView } from 'vue-router';
 
 const store = mainStore();
 store.getCategories();
+
+store.updateLobby();
 </script>
 <style>
 /* font Mua */
