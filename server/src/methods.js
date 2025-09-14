@@ -1,8 +1,14 @@
 import { v4 as uuidv4 } from 'uuid';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
-export const createLobby = async (playerId, playerName, lobbies) => {
-  console.log(playerId, 'step 2.1: lobby is created and the player is its admin.');
+/**
+ * It creates a lobby and adds the admin in the players property. 
+ * @param {string} adminId - The unique id of the admin
+ * @param {string} adminName - The name of the admin
+ * @returns {object} The created lobby
+ */
+export const createLobby = (adminId, adminName) => {
+  console.log(adminId, 'step 2.1: lobby is created and the player is its admin.');
 
   // the lobby is created and added to lobbies array
   const lobby = {
@@ -13,8 +19,8 @@ export const createLobby = async (playerId, playerName, lobbies) => {
     categories: ['Name', 'Animal', 'Country', 'Food'],
     players: [
       {
-        id: playerId,
-        name: playerName,
+        id: adminId,
+        name: adminName,
         isAdmin: true,
         playerPoints: 0,
         progress: [],
@@ -22,16 +28,19 @@ export const createLobby = async (playerId, playerName, lobbies) => {
     ],
     rounds: [],
   };
-  lobbies.push(lobby);
 
   return lobby;
 };
 
-export const enterLobby = async (playerId, playerName, lobbies, lobbyUrl) => {
-  console.log(playerId, 'step 2.2: lobby is entered.');
-
-  // the lobby is searched and the player is added to it.
-  const lobby = lobbies.find((lobby) => lobby.url == lobbyUrl);
+/**
+ * It creates an object for a player 
+ * @param {string} playerId - The unique id of the player
+ * @param {string} playerName - The name of the player
+ * @returns {object} The created player
+ */
+export const createPlayer = (playerId, playerName) => {
+  console.log(playerId, 'step 2.2.1: player object is created.');
+  
   const player = {
     id: playerId,
     name: playerName,
@@ -39,10 +48,8 @@ export const enterLobby = async (playerId, playerName, lobbies, lobbyUrl) => {
     playerPoints: 0,
     progress: [],
   };
-  lobby.players.push(player);
 
-  // the lobby is returned.
-  return lobby;
+  return player;
 };
 
 export const resetLobby = async (lobby) => {
@@ -56,16 +63,22 @@ export const resetLobby = async (lobby) => {
   }
 };
 
-export const removePlayerFromLobby = async (lobbyUrl, playerId, lobbies) => {
+/**
+ * It removes the player from the property players of a lobby. 
+ * @param {*} playerId - The unique id of the player 
+ * @param {*} lobby
+ */
+export const removePlayerFromLobby = async (playerId, lobby) => {
   console.log(playerId, 'step 2.3: player is removed from lobby.');
 
   // remove the player from lobby.
-  const lobby = lobbies.find((lobby) => lobby.url == lobbyUrl);
   lobby.players = lobby.players.filter((player) => player.id != playerId);
-
-  return lobby;
 };
 
+/**
+ * It generates a random letter. 
+ * @returns {string} The random letter
+ */
 export const generateRandomLetter = () => {
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWZ';
   const randomIndex = Math.floor(Math.random() * alphabet.length);

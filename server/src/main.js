@@ -21,32 +21,34 @@ io.on('connection', (socket) => {
   console.log(socket.id, 'step 1: user attended the game.');
   io.emit('receive the available categories', categories);
 
-  // 1. a lobby is created and the client becomes its admin.
+  // 1.1 a lobby is created and the client becomes its admin.
   socket.on('lobby and admin creation', async (playerName) => {
-    const lobby = await methods.createLobby(socket.id, playerName, lobbies);
+    const lobby = methods.createLobby(socket.id, playerName, lobbies);
+    lobbies.push(lobby);
 
-    // Should I send a lobby with different structure to every player?
     socket.join(lobby.url);
-    io.to(lobby.url).emit('user receive your lobby', lobby); // Here the whole lobby is sent to admin.
+    io.to(lobby.url).emit('user receive your lobby', lobby);
   });
 
-  // 2. the client is added to a lobby.
+  // 1.2 the client is added to a lobby.
   socket.on('entering the lobby', async (playerName, lobbyUrl) => {
-    const lobby = await methods.enterLobby(socket.id, playerName, lobbies, lobbyUrl);
+    const lobby = lobbies.find((lobby) => lobby.url == lobbyUrl);
+    const player = methods.createPlayer(socket.id, playerName);
+    lobby.players.push(player);
+    console.log(socket.id, 'step 2.2.2: player is added to the lobby.');
 
-    // Should I send a lobby with different structure to every player?
     socket.join(lobby.url);
-    io.to(lobby.url).emit('user receive your lobby', lobby); // Here the whole lobby is sent to player.
+    io.to(lobby.url).emit('user receive your lobby', lobby);
   });
 
-  // the client is removed from the lobby.
+  // 2.1 the client is removed from the lobby.
   socket.on('remove the player from lobby', async (lobbyUrl, playerId) => {
     // to check whether this is the admin
     let lobby = lobbies.find((lobby) => lobby.url == lobbyUrl);
     const admin = lobby.players.find((player) => player.id == socket.id);
     if (admin.isAdmin) {
       // remove the player from lobby
-      lobby = await methods.removePlayerFromLobby(lobbyUrl, playerId, lobbies);
+      await methods.removePlayerFromLobby(playerId, lobby);
       // send the changes to all players
       io.to(playerId).emit('you have been kicked from lobby');
       io.to(lobby.url).emit('user receive your lobby', lobby); // Here the whole lobby is sent to player.
@@ -56,7 +58,7 @@ io.on('connection', (socket) => {
     }
   });
 
-  // the client left the lobby.
+  // ?.1 the client left the lobby.
   socket.on('im leaving the lobby', async (lobbyUrl) => {
     // to check whether this is the admin or a player
     let lobby = lobbies.find((lobby) => lobby.url == lobbyUrl);
@@ -68,13 +70,13 @@ io.on('connection', (socket) => {
       io.to(lobbyUrl).emit('the lobby is removed');
     } else {
       // remove the player from lobby
-      lobby = await methods.removePlayerFromLobby(lobbyUrl, socket.id, lobbies);
+      await methods.removePlayerFromLobby(socket.id, lobby);
       // send the changes to remained players
       io.to(lobby.url).emit('user receive your lobby', lobby); // Here the whole lobby is sent to player.
     }
   });
 
-  // through admins request the game starts
+  // 2.2 through admins request the game starts
   socket.on('start the game', async (lobbyUrl) => {
     // to check whether this is the admin
     let lobby = lobbies.find((lobby) => lobby.url == lobbyUrl);
