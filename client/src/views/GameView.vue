@@ -1,7 +1,7 @@
 <template>
   <main class="flex flex-col items-center gap-5">
     <div class="mt-10 flex gap-10">
-      <p>A</p>
+      <p>{{ myStore.lobby.rounds[myStore.lobby.rounds.length - 1] }}</p>
       <p>01:10</p>
     </div>
     <div class="flex flex-col gap-5">
@@ -57,8 +57,8 @@ setTimeout(() => {
     myStore.lobby.rounds[myStore.lobby.rounds.length - 1],
     myStore.inputWords,
   );
-  myStore.socket.emit('decide my next view', myStore.lobby.url);
-}, 5000);
+  myStore.socket.emit('should I go to check or review', myStore.lobby.url);
+}, myStore.lobby.timelimit );
 
 // here admin has to go to checkviewHostview and player to chekcviewplayerview.
 myStore.socket.on('you go to check', () => {

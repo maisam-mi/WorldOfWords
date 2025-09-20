@@ -74,7 +74,7 @@ myStore.socket.on('the game is finished', () => {
 });
 
 myStore.socket.on('go to the next round', () => {
-  myStore.socket.emit('letter for the next round', myStore.lobby.url);
+  myStore.socket.emit('start the round', myStore.lobby.url);
 });
 
 </script>

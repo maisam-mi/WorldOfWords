@@ -76,31 +76,14 @@ io.on('connection', (socket) => {
     }
   });
 
-  // 2.2 through admins request the game starts
-  socket.on('start the game', async (lobbyUrl) => {
+  // 2.2 The game starts through admins request
+  socket.on('start the round', async (lobbyUrl) => {
     // to check whether this is the admin
     let lobby = lobbies.find((lobby) => lobby.url == lobbyUrl);
     const admin = lobby.players.find((player) => player.id == socket.id);
     if (admin.isAdmin) {
-      // a letter is randomly chosen.
-      let letterAccepted = false;
-      let letter = methods.generateRandomLetter();
-      while (!letterAccepted) {
-        if (lobby.rounds.find((round) => round == letter)) {
-          letter = methods.generateRandomLetter();
-        } else {
-          letterAccepted = true;
-          lobby.rounds.push(letter);
-        }
-      }
-      // the letter is added to the lobby and the first round is initated.
-      lobby.players.map((player) => {
-        player.progress.push({
-          round: letter,
-          words: methods.createWords(lobby.categories),
-          roundPoints: 0,
-        });
-      });
+      methods.createNewRound(lobby);
+
       // send the changes to all players
       io.to(lobby.url).emit('user receive your lobby', lobby);
       io.to(lobby.url).emit('navigate to letter');
@@ -128,18 +111,14 @@ io.on('connection', (socket) => {
       else {
         // store his words in lobby.
         let words = player.progress.find((el) => el.round == paramRound).words;
-        for (let index = 0; index < words.length; index++) {
-          words[index].value = paramWords.find(
-            (cate) => cate.category == words[index].category,
-          ).label;
-        }
+        methods.storeInputWords(words, paramWords);
         socket.emit('user receive your lobby', lobby);
       }
     }
   });
 
-  // its been decided for checking the words, which client should see what?
-  socket.on('decide my next view', (lobbyUrl) => {
+  // For checking or reviewing the words, which client should see what?
+  socket.on('should I go to check or review', (lobbyUrl) => {
     let lobby = lobbies.find((el) => el.url === lobbyUrl);
     if (!lobby) {
       console.log(socket.id, ': the lobby is not found.');
@@ -154,7 +133,7 @@ io.on('connection', (socket) => {
     }
   });
 
-  // the client (admin) accepts, the the given word in parameter is correct.
+  // the client (admin) accepts, whether the given word in parameter is correct or not.
   socket.on('calculate Points', (lobbyUrl, wordsOwnerId, wordsCategory) => {
     let lobby = lobbies.find((el) => el.url === lobbyUrl);
     if (!lobby) {
@@ -188,7 +167,7 @@ io.on('connection', (socket) => {
   socket.on('go to result or next round', (lobbyUrl) => {
     let lobby = lobbies.find((el) => el.url === lobbyUrl);
     if (!lobby) {
-      console.log(socket.id, ': the lobby is not found.');
+      console.log(socket.id, 'step ?: the lobby is not found.');
       socket.emit('the lobby is not found');
     } else {
       const admin = lobby.players.find((player) => player.id == socket.id);
@@ -205,41 +184,7 @@ io.on('connection', (socket) => {
     }
   });
 
-  // for second and other rounds
-  socket.on('letter for the next round', async (lobbyUrl) => {
-    // to check whether this is the admin
-    let lobby = lobbies.find((lobby) => lobby.url == lobbyUrl);
-    const admin = lobby.players.find((player) => player.id == socket.id);
-    if (admin.isAdmin) {
-      // a letter is randomly chosen.
-      let letterAccepted = false;
-      let letter = methods.generateRandomLetter();
-      while (!letterAccepted) {
-        if (lobby.rounds.find((round) => round == letter)) {
-          letter = methods.generateRandomLetter();
-        } else {
-          letterAccepted = true;
-          lobby.rounds.push(letter);
-        }
-      }
-      // the letter is added to the lobby and the first round is initated.
-      lobby.players.map((player) => {
-        player.progress.push({
-          round: letter,
-          words: methods.createWords(lobby.categories),
-          roundPoints: 0,
-        });
-      });
-      // send the changes to all players
-      io.to(lobby.url).emit('user receive your lobby', lobby);
-      io.to(lobby.url).emit('navigate to letter');
-    } else {
-      console.log(socket.id, ': this user is not admin of the lobby.');
-      socket.emit('you are not the admin of this lobby');
-    }
-  });
-
-  // A client wants to restart the game with the same players. 
+  // A client wants to restart the game with the same players.
   socket.on('go back to lobbyroom', (lobbyUrl) => {
     // to see who the client is, a player or admin
     let lobby = lobbies.find((lobby) => lobby.url == lobbyUrl);
@@ -254,7 +199,35 @@ io.on('connection', (socket) => {
   });
 
   // the client is disconnected to server!
-  socket.on('disconnect', () => methods.removePlayer(socket.id, lobbies));
+  socket.on('disconnect', async () => {
+    // find the lobby, where this client exists.
+    console.log('disconnect');
+    let lobby = lobbies.find((lobby) => {
+      const player = lobby.players.find((player) => player.id == socket.id);
+      if (player) return true;
+      else return false;
+    });
+
+    if (!lobby) {
+      console.log(socket.id, 'step ?: the lobby is deleted.');
+    } else {
+      const admin = lobby.players.find((player) => player.id == socket.id);
+      if (admin.isAdmin) {
+        // delete the lobby
+        const tempUrl = lobby.url; // We need the url of the deleted lobby.
+        lobbies = lobbies.filter((temlobby) => temlobby.url != lobby.url);
+        // make all players leave the lobby
+        io.to(tempUrl).emit('the lobby is removed');
+      } else {
+        // remove the player from lobby
+        await methods.removePlayerFromLobby(socket.id, lobby);
+        // send the changes to remained players
+        io.to(lobby.url).emit('user receive your lobby', lobby); // Here the whole lobby is sent to player.
+      }
+    }
+
+    console.log(socket.id, 'step ?: the user left the game.');
+  });
 });
 
 server.listen(3000, () => console.log('server running on Port 3000'));

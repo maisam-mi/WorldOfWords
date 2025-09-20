@@ -90,7 +90,7 @@ const leaving = () => {
 };
 
 const startTheGame = () => {
-  myStore.socket.emit('start the game', myStore.lobby.url);
+  myStore.socket.emit('start the round', myStore.lobby.url);
 };
 
 myStore.socket.on('navigate to letter', () => {

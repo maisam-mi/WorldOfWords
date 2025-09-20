@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 /**
- * It creates a lobby and adds the admin in the players property. 
+ * It creates a lobby and adds the admin in the players property.
  * @param {string} adminId - The unique id of the admin
  * @param {string} adminName - The name of the admin
  * @returns {object} The created lobby
@@ -13,7 +13,7 @@ export const createLobby = (adminId, adminName) => {
   // the lobby is created and added to lobbies array
   const lobby = {
     url: uuidv4(),
-    timelimit: null, // I have to think about
+    timelimit: 20000, // unit in milliseconds
     countOfRounds: 1,
     selfcheck: true,
     categories: ['Name', 'Animal', 'Country', 'Food'],
@@ -33,14 +33,14 @@ export const createLobby = (adminId, adminName) => {
 };
 
 /**
- * It creates an object for a player 
+ * It creates an object for a player
  * @param {string} playerId - The unique id of the player
  * @param {string} playerName - The name of the player
  * @returns {object} The created player
  */
 export const createPlayer = (playerId, playerName) => {
   console.log(playerId, 'step 2.2.1: player object is created.');
-  
+
   const player = {
     id: playerId,
     name: playerName,
@@ -64,9 +64,9 @@ export const resetLobby = async (lobby) => {
 };
 
 /**
- * It removes the player from the property players of a lobby. 
- * @param {*} playerId - The unique id of the player 
- * @param {*} lobby
+ * It removes the player from the property players of a lobby.
+ * @param {string} playerId - The unique id of the player
+ * @param {object} lobby - the lobby
  */
 export const removePlayerFromLobby = async (playerId, lobby) => {
   console.log(playerId, 'step 2.3: player is removed from lobby.');
@@ -76,7 +76,7 @@ export const removePlayerFromLobby = async (playerId, lobby) => {
 };
 
 /**
- * It generates a random letter. 
+ * It generates a random letter.
  * @returns {string} The random letter
  */
 export const generateRandomLetter = () => {
@@ -86,6 +86,39 @@ export const generateRandomLetter = () => {
   return alphabet[randomIndex];
 };
 
+/**
+ * It creates a new round and adds it to the lobby rounds.
+ * First it chooses randomly a letter and then initates a round for every player.
+ * @param {object} - the lobby
+ */
+export const createNewRound = (lobby) => {
+  // a letter is randomly chosen.
+  let letterAccepted = false;
+  let letter = generateRandomLetter();
+  while (!letterAccepted) {
+    if (lobby.rounds.find((round) => round == letter)) {
+      letter = generateRandomLetter();
+    } else {
+      letterAccepted = true;
+      lobby.rounds.push(letter);
+    }
+  }
+  // the letter is added to the lobby and the first round is initated.
+  lobby.players.map((player) => {
+    player.progress.push({
+      round: letter,
+      words: createWords(lobby.categories),
+      roundPoints: 0,
+    });
+  });
+};
+
+/**
+ * It creates an array, which has an object with properties 
+ * and its used to save the input labels of players.
+ * @param {Array} categories - the categories for the labels
+ * @returns {Array} - a list of empty labels for inputs.
+ */
 export const createWords = (categories) => {
   let words = [];
 
@@ -100,6 +133,12 @@ export const createWords = (categories) => {
   return words;
 };
 
+/**
+ * It stores the words, 
+ * which the player inputed in the words list of the player in the lobby.
+ * @param {Array} words - the list of words 
+ * @param {Array} paramWords - the list of input words
+ */
 export const storeInputWords = (words, paramWords) => {
   for (let index = 0; index < words.length; index++) {
     words[index].value = paramWords.find((cate) => cate.category == words[index].category).label;
@@ -120,12 +159,4 @@ export const checkAnswer = async (label, category, letter) => {
     const text = response.text();
     return text;
   }
-};
-
-export const removePlayer = async (playerId, lobbies) => {
-  console.log(playerId, 'step ?: user exited the game!');
-  // If the disconnected user is an admin, the lobby is removed.
-  // lobbies = lobbies.filter((el) => el.admin.id !== socket.id);
-
-  // users = users.filter((el) => el.id !== socket.id);
 };
