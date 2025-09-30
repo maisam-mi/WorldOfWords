@@ -21,9 +21,6 @@
 import mainStore from '@/stores/store.js';
 import CountdownComp from '../components/CountdownComp.vue';
 import { useRouter } from 'vue-router';
-import { ref } from 'vue';
-
-console.log('Step 4');
 
 const myStore = mainStore();
 

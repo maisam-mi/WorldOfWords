@@ -12,9 +12,19 @@
       <div>
         <p>Rounds</p>
         <div class="mt-2 flex gap-3">
-          <img src="icons/counter.svg" alt="decrease button" class="w-4 rotate-180" />
-          <p>5</p>
-          <img src="icons/counter.svg" alt="increase button" class="w-4" />
+          <img
+            src="icons/counter.svg"
+            alt="decrease button"
+            class="w-4 rotate-180"
+            @click="decreaseCountOfRounds()"
+          />
+          <p>{{ myStore.lobby.countOfRounds }}</p>
+          <img
+            src="icons/counter.svg"
+            alt="increase button"
+            class="w-4"
+            @click="increaseCountOfRounds()"
+          />
         </div>
       </div>
       <div>
@@ -51,7 +61,11 @@
         <tr v-for="player in myStore.lobby.players" :key="player.id" class="flex items-center">
           <td><img v-show="player.isAdmin" src="icons/Admin.svg" alt="admin" class="w-8" /></td>
           <td class="name-data" colspan="2">{{ player.name }}</td>
-          <td><button v-show="!player.isAdmin" class="kick-button" @click="kick(player.id)">Kick</button></td>
+          <td>
+            <button v-show="!player.isAdmin" class="kick-button" @click="kick(player.id)">
+              Kick
+            </button>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -67,11 +81,24 @@
 import mainStore from '@/stores/store.js';
 import { useRouter } from 'vue-router';
 
-console.log('Step 2');
-
 const myStore = mainStore();
 
 const router = useRouter();
+
+const decreaseCountOfRounds = () => {
+  myStore.socket.emit(
+    'change the amount of rounds',
+    myStore.lobby.url,
+    myStore.lobby.countOfRounds - 1,
+  );
+};
+const increaseCountOfRounds = () => {
+  myStore.socket.emit(
+    'change the amount of rounds',
+    myStore.lobby.url,
+    myStore.lobby.countOfRounds + 1,
+  );
+};
 
 const copyContent = async () => {
   let url = myStore.lobby.url;
@@ -90,7 +117,7 @@ const leaving = () => {
 };
 
 const startTheGame = () => {
-  myStore.socket.emit('start the round', myStore.lobby.url);
+  myStore.socket.emit('start the game', myStore.lobby.url);
 };
 
 myStore.socket.on('navigate to letter', () => {
@@ -100,7 +127,6 @@ myStore.socket.on('navigate to letter', () => {
 const kick = (playerId) => {
   myStore.socket.emit('remove the player from lobby', myStore.lobby.url, playerId);
 };
-
 </script>
 
 <style scoped>
@@ -123,11 +149,11 @@ button {
   top: 0px;
   width: 18px;
   height: 18px;
-  outline: 2px solid #EAEAEA;
+  outline: 2px solid #eaeaea;
   background: none;
 }
 [type='checkbox']:checked + label::after {
-content: '';
+  content: '';
   position: absolute;
   left: 0px;
   top: 0px;

@@ -45,9 +45,6 @@ import { ref } from 'vue';
 const myStore = mainStore();
 const router = useRouter();
 
-console.log('Step 5');
-
-
 const leaving = () => {
   myStore.socket.emit('im leaving the lobby', myStore.lobby.url);
   myStore.clearStore();

@@ -13,7 +13,7 @@ export const createLobby = (adminId, adminName) => {
   // the lobby is created and added to lobbies array
   const lobby = {
     url: uuidv4(),
-    timelimit: 20000, // unit in milliseconds
+    timelimit: 1000, // unit in milliseconds
     countOfRounds: 1,
     selfcheck: true,
     categories: ['Name', 'Animal', 'Country', 'Food'],
@@ -114,7 +114,7 @@ export const createNewRound = (lobby) => {
 };
 
 /**
- * It creates an array, which has an object with properties 
+ * It creates an array, which has an object with properties
  * and its used to save the input labels of players.
  * @param {Array} categories - the categories for the labels
  * @returns {Array} - a list of empty labels for inputs.
@@ -134,9 +134,9 @@ export const createWords = (categories) => {
 };
 
 /**
- * It stores the words, 
+ * It stores the words,
  * which the player inputed in the words list of the player in the lobby.
- * @param {Array} words - the list of words 
+ * @param {Array} words - the list of words
  * @param {Array} paramWords - the list of input words
  */
 export const storeInputWords = (words, paramWords) => {

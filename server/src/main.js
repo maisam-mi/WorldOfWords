@@ -58,6 +58,19 @@ io.on('connection', (socket) => {
     }
   });
 
+  // 2.2 the amount of rounds are changed.
+  socket.on('change the amount of rounds', (lobbyUrl, amount) => {
+    let lobby = lobbies.find((lobby) => lobby.url == lobbyUrl);
+    const admin = lobby.players.find((player) => player.id == socket.id);
+    if (admin.isAdmin) {
+      lobby.countOfRounds = amount;
+      io.to(lobby.url).emit('user receive your lobby', lobby); // Here the whole lobby is sent to player.
+    } else {
+      console.log(socket.id, ': this user is not admin of the lobby.');
+      socket.emit('you are not the admin of this lobby');
+    }
+  });
+
   // ?.1 the client left the lobby.
   socket.on('im leaving the lobby', async (lobbyUrl) => {
     // to check whether this is the admin or a player
@@ -77,7 +90,7 @@ io.on('connection', (socket) => {
   });
 
   // 2.2 The game starts through admins request
-  socket.on('start the round', async (lobbyUrl) => {
+  socket.on('start the game', (lobbyUrl) => {
     // to check whether this is the admin
     let lobby = lobbies.find((lobby) => lobby.url == lobbyUrl);
     const admin = lobby.players.find((player) => player.id == socket.id);
@@ -172,10 +185,14 @@ io.on('connection', (socket) => {
     } else {
       const admin = lobby.players.find((player) => player.id == socket.id);
       if (admin.isAdmin) {
-        if (lobby.rounds.length == lobby.countOfRounds) {
+        if (lobby.rounds.length >= lobby.countOfRounds) {
           io.to(lobby.url).emit('the game is finished');
         } else {
-          io.to(lobby.url).emit('go to the next round');
+          methods.createNewRound(lobby);
+
+          // send the changes to all players
+          io.to(lobby.url).emit('user receive your lobby', lobby);
+          io.to(lobby.url).emit('navigate to letter');
         }
       } else {
         console.log(socket.id, ': this user is not admin of the lobby.');

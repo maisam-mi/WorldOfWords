@@ -73,10 +73,6 @@ myStore.socket.on('the game is finished', () => {
   router.push('/result');
 });
 
-myStore.socket.on('go to the next round', () => {
-  myStore.socket.emit('start the round', myStore.lobby.url);
-});
-
 </script>
 
 <style scoped>

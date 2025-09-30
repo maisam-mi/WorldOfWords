@@ -15,8 +15,6 @@ import mainStore from '@/stores/store.js';
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
 
-console.log('Step 1');
-
 const myStore = mainStore();
 
 const router = useRouter();
