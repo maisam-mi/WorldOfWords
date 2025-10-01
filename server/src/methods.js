@@ -14,7 +14,7 @@ export const createLobby = (adminId, adminName) => {
   const lobby = {
     url: uuidv4(),
     timelimit: 1000, // unit in milliseconds
-    countOfRounds: 25,
+    countOfRounds: 1,
     selfcheck: true,
     categories: ['Name', 'Animal', 'Country', 'Food'],
     players: [
