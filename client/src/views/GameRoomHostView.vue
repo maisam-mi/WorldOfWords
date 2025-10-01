@@ -86,18 +86,26 @@ const myStore = mainStore();
 const router = useRouter();
 
 const decreaseCountOfRounds = () => {
-  myStore.socket.emit(
-    'change the amount of rounds',
-    myStore.lobby.url,
-    myStore.lobby.countOfRounds - 1,
-  );
+  if (myStore.lobby.countOfRounds - 1 >= 1)
+    myStore.socket.emit(
+      'change the amount of rounds',
+      myStore.lobby.url,
+      myStore.lobby.countOfRounds - 1,
+    );
+  else {
+    window.alert('The amount of rounds is less than the minimum!');
+  }
 };
 const increaseCountOfRounds = () => {
-  myStore.socket.emit(
-    'change the amount of rounds',
-    myStore.lobby.url,
-    myStore.lobby.countOfRounds + 1,
-  );
+  if (myStore.lobby.countOfRounds + 1 <= 26) {
+    myStore.socket.emit(
+      'change the amount of rounds',
+      myStore.lobby.url,
+      myStore.lobby.countOfRounds + 1,
+    );
+  } else {
+    window.alert('The amount of rounds is more than the amount of letters!');
+  }
 };
 
 const copyContent = async () => {
@@ -119,6 +127,11 @@ const leaving = () => {
 const startTheGame = () => {
   myStore.socket.emit('start the game', myStore.lobby.url);
 };
+
+myStore.socket.on('amount of rounds N/A', (moreOrLess) => {
+  if (moreOrLess) window.alert('The amount of rounds is more than the amount of letters!');
+  else window.alert('The amount of rounds is less than the minimum!');
+});
 
 myStore.socket.on('navigate to letter', () => {
   router.replace('/letter');

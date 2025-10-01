@@ -63,8 +63,18 @@ io.on('connection', (socket) => {
     let lobby = lobbies.find((lobby) => lobby.url == lobbyUrl);
     const admin = lobby.players.find((player) => player.id == socket.id);
     if (admin.isAdmin) {
-      lobby.countOfRounds = amount;
-      io.to(lobby.url).emit('user receive your lobby', lobby); // Here the whole lobby is sent to player.
+      if (amount >= 1) {
+        if (amount <= 26) {
+          lobby.countOfRounds = amount;
+          io.to(lobby.url).emit('user receive your lobby', lobby); // Here the whole lobby is sent to player.
+        } else {
+          console.log(socket.id, ': the amount of rounds is more than 26!');
+          socket.emit('amount of rounds N/A', true);
+        }
+      } else {
+        console.log(socket.id, ': the amount of rounds is less than the minimum!');
+        socket.emit('amount of rounds N/A', false);
+      }
     } else {
       console.log(socket.id, ': this user is not admin of the lobby.');
       socket.emit('you are not the admin of this lobby');
