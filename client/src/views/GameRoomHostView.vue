@@ -4,9 +4,19 @@
       <div>
         <p>Timelimit</p>
         <div class="mt-2 flex gap-3">
-          <img src="icons/counter.svg" alt="decrease button" class="w-4 rotate-180" />
-          <p>01:05</p>
-          <img src="icons/counter.svg" alt="increase button" class="w-4" />
+          <img
+            src="icons/counter.svg"
+            alt="decrease button"
+            class="w-4 rotate-180"
+            @click="decreaseTimeLimit()"
+          />
+          <p>{{ formatedTimeLimit }}</p>
+          <img
+            src="icons/counter.svg"
+            alt="increase button"
+            class="w-4"
+            @click="increaseTimeLimit()"
+          />
         </div>
       </div>
       <div>
@@ -27,13 +37,13 @@
           />
         </div>
       </div>
-      <div>
+      <!-- <div>
         <p>Who checks the words?</p>
         <div class="mt-2 flex justify-evenly gap-3">
           <img src="icons/players.svg" alt="players button" class="w-8" />
           <img src="icons/artificial_intelligence.svg" alt="ai button" class="w-8" />
         </div>
-      </div>
+      </div> -->
     </div>
     <div class="text-left">
       <p>Categories:</p>
@@ -80,10 +90,44 @@
 <script setup>
 import mainStore from '@/stores/store.js';
 import { useRouter } from 'vue-router';
+import { computed } from 'vue';
 
 const myStore = mainStore();
 
 const router = useRouter();
+
+// to convert the milliseconds to "min:sec" format
+const formatedTimeLimit = computed(() => {
+  let formatedTimeLimit = null;
+
+  formatedTimeLimit = myStore.lobby.timelimit / 1000;
+  let minutes = Math.floor(formatedTimeLimit / 60);
+  if (minutes < 10) minutes = '0' + minutes;
+  let seconds = formatedTimeLimit % 60;
+  if (seconds < 10) seconds = '0' + seconds;
+  formatedTimeLimit = minutes + ':' + seconds;
+
+  return formatedTimeLimit;
+});
+
+const decreaseTimeLimit = () => {
+  if (myStore.lobby.timelimit - 1000 >= 10000)
+    myStore.socket.emit(
+      'change the amount of timelimit',
+      myStore.lobby.url,
+      myStore.lobby.timelimit - 1000,
+    );
+  else {
+    window.alert('The amount of timelimit is less than the minimum!');
+  }
+};
+const increaseTimeLimit = () => {
+  myStore.socket.emit(
+    'change the amount of timelimit',
+    myStore.lobby.url,
+    myStore.lobby.timelimit + 1000,
+  );
+};
 
 const decreaseCountOfRounds = () => {
   if (myStore.lobby.countOfRounds - 1 >= 1)
@@ -131,6 +175,10 @@ const startTheGame = () => {
 myStore.socket.on('amount of rounds N/A', (moreOrLess) => {
   if (moreOrLess) window.alert('The amount of rounds is more than the amount of letters!');
   else window.alert('The amount of rounds is less than the minimum!');
+});
+
+myStore.socket.on('amount of timelimit N/A', () => {
+  window.alert('The amount of timelimit is less than the minimum!');
 });
 
 myStore.socket.on('navigate to letter', () => {

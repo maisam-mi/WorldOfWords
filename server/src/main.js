@@ -58,7 +58,7 @@ io.on('connection', (socket) => {
     }
   });
 
-  // 2.2 the amount of rounds are changed.
+  // 2.2 the amount of rounds is changed.
   socket.on('change the amount of rounds', (lobbyUrl, amount) => {
     let lobby = lobbies.find((lobby) => lobby.url == lobbyUrl);
     const admin = lobby.players.find((player) => player.id == socket.id);
@@ -74,6 +74,24 @@ io.on('connection', (socket) => {
       } else {
         console.log(socket.id, ': the amount of rounds is less than the minimum!');
         socket.emit('amount of rounds N/A', false);
+      }
+    } else {
+      console.log(socket.id, ': this user is not admin of the lobby.');
+      socket.emit('you are not the admin of this lobby');
+    }
+  });
+
+  // 2.3 the amount of timelimit is changed.
+  socket.on('change the amount of timelimit', (lobbyUrl, timelimit) => {
+    let lobby = lobbies.find((lobby) => lobby.url == lobbyUrl);
+    const admin = lobby.players.find((player) => player.id == socket.id);
+    if (admin.isAdmin) {
+      if (timelimit >= 10000) {
+        lobby.timelimit = timelimit;
+        io.to(lobby.url).emit('user receive your lobby', lobby); // Here the whole lobby is sent to player.
+      } else {
+        console.log(socket.id, ': the amount of timelimit is less than the minimum!');
+        socket.emit('amount of timelimit N/A');
       }
     } else {
       console.log(socket.id, ': this user is not admin of the lobby.');
