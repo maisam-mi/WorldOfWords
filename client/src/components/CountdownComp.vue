@@ -62,6 +62,9 @@ onBeforeUnmount(() => {
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import { TweenMax, Quart } from "gsap";
+import mainStore from '@/stores/store.js';
+
+const myStore = mainStore();
 
 const totalSeconds = ref(60);
 const seconds = ref(["6", "0"]);

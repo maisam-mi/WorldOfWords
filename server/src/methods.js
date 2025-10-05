@@ -13,7 +13,7 @@ export const createLobby = (adminId, adminName) => {
   // the lobby is created and added to lobbies array
   const lobby = {
     url: uuidv4(),
-    timelimit: 15000, // unit in milliseconds
+    timelimit: 30000, // unit in milliseconds (minimum is 10000 milliseconds)
     countOfRounds: 5,
     selfcheck: true,
     categories: ['Name', 'Animal', 'Country', 'Food'],
