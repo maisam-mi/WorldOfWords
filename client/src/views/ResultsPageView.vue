@@ -4,16 +4,16 @@
       <div class="flex justify-center gap-[5rem]">
         <div class="mt-20">
           <p class="rank">2</p>
-          <p>Rana 30 points</p>
+          <p>{{myStore.ranks[1].name}} {{myStore.ranks[1].playerPoints}} points</p>
         </div>
         <div>
           <p class="rank">1</p>
-          <p>Maisam 50 points</p>
+          <p>{{myStore.ranks[0].name}} {{myStore.ranks[0].playerPoints}} points</p>
         </div>
 
         <div class="mt-40">
           <p class="rank">3</p>
-          <p>Anar 20 points</p>
+          <p>{{myStore.ranks[2].name}} {{myStore.ranks[2].playerPoints}} points</p>
         </div>
       </div>
       <div class="flex justify-between">
@@ -26,10 +26,10 @@
       <p>Result List</p>
       <table>
         <tbody>
-          <tr v-for="player in ranks" :key="player" class="flex items-center justify-between">
-            <td>{{ ranks.indexOf(player) + 1 }}</td>
+          <tr v-for="player in myStore.ranks" :key="player" class="flex items-center justify-between">
+            <td>{{ myStore.ranks.indexOf(player) + 1 }}</td>
             <td class="name-data" colspan="2">{{ player.name }}</td>
-            <td>{{ player.points }}</td>
+            <td>{{ player.playerPoints }}</td>
           </tr>
         </tbody>
       </table>
@@ -44,6 +44,8 @@ import { ref } from 'vue';
 
 const myStore = mainStore();
 const router = useRouter();
+
+myStore.updateRanks();
 
 const leaving = () => {
   myStore.socket.emit('im leaving the lobby', myStore.lobby.url);

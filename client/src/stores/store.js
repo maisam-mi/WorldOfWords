@@ -31,16 +31,26 @@ const mainStore = defineStore(
       },
     ]);
 
+    const ranks = ref(null);
+
     const getCategories = () => {
       socket.on('receive the available categories', (paramCategories) => {
         categories.value = paramCategories;
       });
-    }
+    };
 
     const updateLobby = () => {
       socket.on('user receive your lobby', (paramLobby) => {
         lobby.value = paramLobby;
       });
+    };
+
+    const updateRanks = () => {
+      ranks.value = lobby.value.players.sort((a, b) => {
+        console.log(a, b);
+        return a.playerPoints - b.playerPoints;
+      });
+      ranks.value = ranks.value.reverse();
     };
 
     const getResult = () => {
@@ -53,8 +63,7 @@ const mainStore = defineStore(
       socket.emit('Im leaving, overwrite the lobby', lobby.value.url);
     };
 
-    const clearStore = () => {
-      lobby.value = null;
+    const clearInputs = () => {
       inputWords.value = [
         {
           category: 'Name',
@@ -74,16 +83,24 @@ const mainStore = defineStore(
         },
       ];
     };
+
+    const clearStore = () => {
+      lobby.value = null;
+      clearInputs();
+    };
     // #endregion
 
     return {
       socket,
       lobby,
       inputWords,
+      ranks,
       getCategories,
       updateLobby,
+      updateRanks,
       getResult,
       playerleaving,
+      clearInputs,
       clearStore,
     };
   },

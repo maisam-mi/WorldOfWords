@@ -4,8 +4,8 @@
     <p class="letter">{{ myStore.lobby.rounds[myStore.lobby.rounds.length - 1] }}</p>
     <table>
       <tbody>
-        <tr v-for="player in bests" :key="player.id" class="flex items-center justify-between">
-          <td>{{ bests.indexOf(player) + 1 }}</td>
+        <tr v-for="player in ranks" :key="player.id" class="flex items-center justify-between">
+          <td>{{ ranks.indexOf(player) + 1 }}</td>
           <td class="name-data" colspan="2">{{ player.name }}</td>
           <td>{{ player.playerPoints }}</td>
         </tr>
@@ -22,9 +22,8 @@ const myStore = mainStore();
 
 const router = useRouter();
 
-const bests = [];
-
-// here comes the codes for storing top 3 bests in variable bests. 
+myStore.updateRanks();
+const ranks = myStore.ranks.slice(0, 3);
 
 setTimeout(() => {
   router.push('/game');
@@ -32,7 +31,7 @@ setTimeout(() => {
 </script>
 
 <style scoped>
-.letter{
+.letter {
   font-size: 20rem;
 }
 

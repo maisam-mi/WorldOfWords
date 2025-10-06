@@ -30,7 +30,7 @@ const router = useRouter();
 const remainingtime = ref(myStore.lobby.timelimit);
 setInterval(() => {
   remainingtime.value -= 1000;
-  if (counter < 0) {
+  if (remainingtime.value < 0) {
     clearInterval(interval);
   }
 }, 1000);
@@ -74,6 +74,7 @@ setTimeout(() => {
     myStore.lobby.rounds[myStore.lobby.rounds.length - 1],
     myStore.inputWords,
   );
+  myStore.clearInputs();
   myStore.socket.emit('should I go to check or review', myStore.lobby.url);
 }, myStore.lobby.timelimit);
 
