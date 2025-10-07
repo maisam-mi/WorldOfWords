@@ -99,6 +99,19 @@ io.on('connection', (socket) => {
     }
   });
 
+  // 2.4 the categories are changed.
+  socket.on('change the amount of choosenCategories', (lobbyUrl, choosenCategories) => {
+    let lobby = lobbies.find((lobby) => lobby.url == lobbyUrl);
+    const admin = lobby.players.find((player) => player.id == socket.id);
+    if (admin.isAdmin) {
+      lobby.categories = choosenCategories;
+      io.to(lobby.url).emit('user receive your lobby', lobby);
+    } else {
+      console.log(socket.id, ': this user is not admin of the lobby.');
+      socket.emit('you are not the admin of this lobby');
+    }
+  });
+
   // ?.1 the client left the lobby.
   socket.on('im leaving the lobby', async (lobbyUrl) => {
     // to check whether this is the admin or a player

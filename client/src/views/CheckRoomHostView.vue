@@ -4,7 +4,7 @@
       <p class="text-[30pt]">{{ myStore.lobby.rounds[myStore.lobby.rounds.length - 1] }}</p>
       <p>Discuss about the answers.</p>
       <p class="text-[13pt]">
-        ! Click on <img src="icons/check_mark.svg" alt="check_mark" /> for right answers.
+        ! Click on <img src="/icons/check_mark.svg" alt="check_mark" /> for right answers.
       </p>
     </div>
     <table>
@@ -15,7 +15,7 @@
       <tr v-for="player in myStore.lobby.players" :key="player.name">
         <td>{{ player.name }}</td>
         <td v-for="word in player.progress[myStore.lobby.rounds.length - 1].words" :key="word">
-          {{ word.value }} <img src="icons/check_mark.svg" alt="check_mark" @click="calculatePoints(player.id, word)" :style="{ opacity: word.wordPoints == 10 ? '1' : '0.5' }" />
+          {{ word.value }} <img src="/icons/check_mark.svg" alt="check_mark" @click="calculatePoints(player.id, word)" :style="{ opacity: word.wordPoints == 10 ? '1' : '0.5' }" />
         </td>
       </tr>
     </table>

@@ -5,14 +5,14 @@
         <p>Timelimit</p>
         <div class="mt-2 flex gap-3">
           <img
-            src="icons/counter.svg"
+            src="/icons/counter.svg"
             alt="decrease button"
             class="w-4 rotate-180"
             @click="decreaseTimeLimit()"
           />
           <p>{{ formatedTimeLimit }}</p>
           <img
-            src="icons/counter.svg"
+            src="/icons/counter.svg"
             alt="increase button"
             class="w-4"
             @click="increaseTimeLimit()"
@@ -23,14 +23,14 @@
         <p>Rounds</p>
         <div class="mt-2 flex gap-3">
           <img
-            src="icons/counter.svg"
+            src="/icons/counter.svg"
             alt="decrease button"
             class="w-4 rotate-180"
             @click="decreaseCountOfRounds()"
           />
           <p>{{ myStore.lobby.countOfRounds }}</p>
           <img
-            src="icons/counter.svg"
+            src="/icons/counter.svg"
             alt="increase button"
             class="w-4"
             @click="increaseCountOfRounds()"
@@ -40,36 +40,30 @@
       <!-- <div>
         <p>Who checks the words?</p>
         <div class="mt-2 flex justify-evenly gap-3">
-          <img src="icons/players.svg" alt="players button" class="w-8" />
-          <img src="icons/artificial_intelligence.svg" alt="ai button" class="w-8" />
+          <img src="/icons/players.svg" alt="players button" class="w-8" />
+          <img src="/icons/artificial_intelligence.svg" alt="ai button" class="w-8" />
         </div>
       </div> -->
     </div>
     <div class="text-left">
       <p>Categories:</p>
       <form class="mt-2 flex gap-4">
-        <div>
-          <input type="checkbox" id="name" name="name" value="Name" />
-          <label for="name">Name</label>
-        </div>
-        <div>
-          <input type="checkbox" id="city" name="city" value="City" />
-          <label for="city">City</label>
-        </div>
-        <div>
-          <input type="checkbox" id="food" name="food" value="Food" />
-          <label for="food">Food</label>
-        </div>
-        <div>
-          <input type="checkbox" id="sport" name="sport" value="Sport" />
-          <label for="sport">Sport</label>
+        <div v-for="category in myStore.categories" :key="category">
+          <input
+            type="checkbox"
+            :id="category"
+            :name="category"
+            :value="category"
+            v-model="choosedCategories"
+          />
+          <label :for="category">{{ category }}</label>
         </div>
       </form>
     </div>
     <table>
       <tbody>
         <tr v-for="player in myStore.lobby.players" :key="player.id" class="flex items-center">
-          <td><img v-show="player.isAdmin" src="icons/Admin.svg" alt="admin" class="w-8" /></td>
+          <td><img v-show="player.isAdmin" src="/icons/Admin.svg" alt="admin" class="w-8" /></td>
           <td class="name-data" colspan="2">{{ player.name }}</td>
           <td>
             <button v-show="!player.isAdmin" class="kick-button" @click="kick(player.id)">
@@ -90,7 +84,7 @@
 <script setup>
 import mainStore from '@/stores/store.js';
 import { useRouter } from 'vue-router';
-import { computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 
 const myStore = mainStore();
 
@@ -152,6 +146,15 @@ const increaseCountOfRounds = () => {
   }
 };
 
+const choosedCategories = ref(['Name', 'Animal']);
+watch(choosedCategories, () => {
+  myStore.socket.emit(
+    'change the amount of choosenCategories',
+    myStore.lobby.url,
+    choosedCategories.value,
+  );
+});
+
 const copyContent = async () => {
   let url = myStore.lobby.url;
   try {
@@ -169,7 +172,12 @@ const leaving = () => {
 };
 
 const startTheGame = () => {
-  myStore.socket.emit('start the game', myStore.lobby.url);
+  if (myStore.lobby.categories.length >= 1) {
+    myStore.updateInputs();
+    myStore.socket.emit('start the game', myStore.lobby.url);
+  } else {
+    window.alert('You have to choose at least one category!');
+  }
 };
 
 myStore.socket.on('amount of rounds N/A', (moreOrLess) => {

@@ -3,32 +3,29 @@
     <div class="flex justify-evenly">
       <div>
         <p>Timelimit</p>
-        <p>01:05</p>
+        <p>{{ formatedTimeLimit }}</p>
       </div>
       <div>
         <p>Rounds</p>
-        <p>5</p>
+        <p>{{ myStore.lobby.countOfRounds }}</p>
       </div>
-      <div>
+      <!-- <div>
         <p>Who checks the words?</p>
         <div class="mt-2 flex justify-center">
-          <img src="icons/players.svg" alt="players button" class="w-8" />
+          <img src="/icons/players.svg" alt="players button" class="w-8" />
         </div>
-      </div>
+      </div> -->
     </div>
     <div class="text-left">
       <p>Categories:</p>
       <div class="mt-2 flex gap-4">
-        <span for="name">Name</span>
-        <span for="city">City</span>
-        <span for="food">Food</span>
-        <span for="sport">Sport</span>
+        <span v-for="category in myStore.lobby.categories" :key="category" :for="category">{{ category }}</span>
       </div>
     </div>
     <table>
       <tbody>
         <tr v-for="player in myStore.lobby.players" :key="player.id" class="flex items-center">
-          <td><img v-show="player.isAdmin" src="icons/Admin.svg" alt="admin" class="w-8" /></td>
+          <td><img v-show="player.isAdmin" src="/icons/Admin.svg" alt="admin" class="w-8" /></td>
           <td class="name-data" colspan="2">{{ player.name }}</td>
           <td></td>
         </tr>
@@ -44,9 +41,23 @@
 <script setup>
 import mainStore from '@/stores/store.js';
 import { useRouter } from 'vue-router';
+import { computed } from 'vue';
 
 const myStore = mainStore();
 const router = useRouter();
+
+const formatedTimeLimit = computed(() => {
+  let formatedTimeLimit = null;
+
+  formatedTimeLimit = myStore.lobby.timelimit / 1000;
+  let minutes = Math.floor(formatedTimeLimit / 60);
+  if (minutes < 10) minutes = '0' + minutes;
+  let seconds = formatedTimeLimit % 60;
+  if (seconds < 10) seconds = '0' + seconds;
+  formatedTimeLimit = minutes + ':' + seconds;
+
+  return formatedTimeLimit;
+});
 
 const leaving = () => {
   myStore.socket.emit('im leaving the lobby', myStore.lobby.url);
@@ -73,7 +84,6 @@ myStore.socket.on('the lobby is removed', () => {
 myStore.socket.on('you are not the admin of this lobby', () => {
   window.alert('you are not the admin of this lobby!');
 });
-
 </script>
 
 <style scoped>

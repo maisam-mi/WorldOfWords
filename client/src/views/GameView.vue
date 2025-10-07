@@ -74,7 +74,7 @@ setTimeout(() => {
     myStore.lobby.rounds[myStore.lobby.rounds.length - 1],
     myStore.inputWords,
   );
-  myStore.clearInputs();
+  myStore.updateInputs();
   myStore.socket.emit('should I go to check or review', myStore.lobby.url);
 }, myStore.lobby.timelimit);
 

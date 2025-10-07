@@ -16,7 +16,7 @@ export const createLobby = (adminId, adminName) => {
     timelimit: 30000, // unit in milliseconds (minimum is 10000 milliseconds)
     countOfRounds: 5,
     selfcheck: true,
-    categories: ['Name', 'Animal', 'Country', 'Food'],
+    categories: ['Name', 'Animal'],
     players: [
       {
         id: adminId,
