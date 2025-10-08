@@ -34,6 +34,11 @@ button {
   background: transparent;
   border: 2px solid #eaeaea;
 }
+button:hover {
+  background: #eaeaea;
+  border: 2px solid #eaeaea;
+  color: #333333;
+}
 
 input {
   background: transparent;
