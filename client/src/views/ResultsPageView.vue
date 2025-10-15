@@ -2,7 +2,7 @@
   <main>
     <div v-if="!showWholeResult" class="flex flex-col gap-[6rem]">
       <div class="flex justify-center gap-[5rem]">
-        <div class="mt-20">
+        <div v-if="myStore.ranks[1] != null" class="mt-20">
           <p class="rank">2</p>
           <p>{{myStore.ranks[1].name}} {{myStore.ranks[1].playerPoints}} points</p>
         </div>
@@ -11,7 +11,7 @@
           <p>{{myStore.ranks[0].name}} {{myStore.ranks[0].playerPoints}} points</p>
         </div>
 
-        <div class="mt-40">
+        <div v-if="myStore.ranks[2] != null" class="mt-40">
           <p class="rank">3</p>
           <p>{{myStore.ranks[2].name}} {{myStore.ranks[2].playerPoints}} points</p>
         </div>

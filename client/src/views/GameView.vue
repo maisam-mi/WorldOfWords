@@ -31,7 +31,7 @@ const remainingtime = ref(myStore.lobby.timelimit);
 setInterval(() => {
   remainingtime.value -= 1000;
   if (remainingtime.value < 0) {
-    clearInterval(interval);
+    clearInterval();
   }
 }, 1000);
 const formatedTimeLimit = computed(() => {

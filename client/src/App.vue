@@ -1,6 +1,8 @@
 <template>
   <div class="mx-[20rem] mt-[15rem]">
-    <RouterView />
+    <Transition>
+      <RouterView />
+    </Transition>
   </div>
 </template>
 <script setup>
@@ -8,7 +10,6 @@ import mainStore from '@/stores/store.js';
 import { RouterView } from 'vue-router';
 
 const store = mainStore();
-store.getCategories();
 
 store.updateLobby();
 </script>
@@ -50,5 +51,15 @@ input[type='text'] {
 }
 input:focus {
   outline: none;
+}
+
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
 }
 </style>

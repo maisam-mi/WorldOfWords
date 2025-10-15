@@ -91,13 +91,14 @@ const mainStore = defineStore(
     };
     // #endregion
 
+    getCategories();
+
     return {
       socket,
       categories,
       lobby,
       inputWords,
       ranks,
-      getCategories,
       updateLobby,
       updateRanks,
       getResult,
