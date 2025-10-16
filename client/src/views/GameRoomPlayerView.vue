@@ -19,16 +19,22 @@
     <div class="text-left">
       <p>Categories:</p>
       <div class="mt-2 flex gap-4">
-        <span v-for="category in myStore.lobby.categories" :key="category" :for="category">{{ category }}</span>
+        <TransitionGroup name="span">
+          <span v-for="category in myStore.lobby.categories" :key="category" :for="category">{{
+            category
+          }}</span></TransitionGroup
+        >
       </div>
     </div>
     <table>
       <tbody>
-        <tr v-for="player in myStore.lobby.players" :key="player.id" class="flex items-center">
-          <td><img v-show="player.isAdmin" src="/icons/Admin.svg" alt="admin" class="w-8" /></td>
-          <td class="name-data" colspan="2">{{ player.name }}</td>
-          <td></td>
-        </tr>
+        <TransitionGroup name="table">
+          <tr v-for="player in myStore.lobby.players" :key="player.id" class="flex items-center">
+            <td><img v-show="player.isAdmin" src="/icons/Admin.svg" alt="admin" class="w-8" /></td>
+            <td class="name-data" colspan="2">{{ player.name }}</td>
+            <td></td>
+          </tr>
+        </TransitionGroup>
       </tbody>
     </table>
     <div class="flex justify-between">
@@ -91,6 +97,20 @@ button {
   padding: 15px 30px;
 }
 
+.span-move,
+.span-enter-active,
+.span-leave-active {
+  transition: all 0.5s ease;
+}
+.span-enter-from,
+.span-leave-to {
+  opacity: 0;
+  transform: translateX(-10px);
+}
+.span-leave-active {
+  position: absolute;
+}
+
 table {
   border-collapse: collapse;
   width: 100%;
@@ -102,6 +122,19 @@ td {
   width: 20%;
   padding: 10px;
   padding-left: 2rem;
+}
+.table-move,
+.table-enter-active,
+.table-leave-active {
+  transition: all 0.5s ease;
+}
+.table-enter-from,
+.table-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+.table-leave-active {
+  position: absolute;
 }
 
 .name-data {

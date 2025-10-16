@@ -62,15 +62,17 @@
     </div>
     <table>
       <tbody>
-        <tr v-for="player in myStore.lobby.players" :key="player.id" class="flex items-center">
-          <td><img v-show="player.isAdmin" src="/icons/Admin.svg" alt="admin" class="w-8" /></td>
-          <td class="name-data" colspan="2">{{ player.name }}</td>
-          <td>
-            <button v-show="!player.isAdmin" class="kick-button" @click="kick(player.id)">
-              Kick
-            </button>
-          </td>
-        </tr>
+        <TransitionGroup name="table">
+          <tr v-for="player in myStore.lobby.players" :key="player.id" class="flex items-center">
+            <td><img v-show="player.isAdmin" src="/icons/Admin.svg" alt="admin" class="w-8" /></td>
+            <td class="name-data" colspan="2">{{ player.name }}</td>
+            <td>
+              <button v-show="!player.isAdmin" class="kick-button" @click="kick(player.id)">
+                Kick
+              </button>
+            </td>
+          </tr>
+        </TransitionGroup>
       </tbody>
     </table>
     <div class="flex justify-between">
@@ -246,6 +248,15 @@ td {
 }
 .kick-button {
   padding: 10px 45px;
+}
+.table-enter-active,
+.table-leave-active {
+  transition: all 0.5s ease;
+}
+.table-enter-from,
+.table-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
 }
 
 .name-data {

@@ -2,18 +2,18 @@
   <main>
     <div v-if="!showWholeResult" class="flex flex-col gap-[6rem]">
       <div class="flex justify-center gap-[5rem]">
-        <div v-if="myStore.ranks[1] != null" class="mt-20">
+        <div v-if="myStore.ranks[1] != null" class="place secondPlace mt-20">
           <p class="rank">2</p>
-          <p>{{myStore.ranks[1].name}} {{myStore.ranks[1].playerPoints}} points</p>
+          <p>{{ myStore.ranks[1].name }} {{ myStore.ranks[1].playerPoints }} points</p>
         </div>
-        <div>
+        <div class="place firstPlace">
           <p class="rank">1</p>
-          <p>{{myStore.ranks[0].name}} {{myStore.ranks[0].playerPoints}} points</p>
+          <p>{{ myStore.ranks[0].name }} {{ myStore.ranks[0].playerPoints }} points</p>
         </div>
 
-        <div v-if="myStore.ranks[2] != null" class="mt-40">
+        <div v-if="myStore.ranks[2] != null" class="place thirdPlace mt-40">
           <p class="rank">3</p>
-          <p>{{myStore.ranks[2].name}} {{myStore.ranks[2].playerPoints}} points</p>
+          <p>{{ myStore.ranks[2].name }} {{ myStore.ranks[2].playerPoints }} points</p>
         </div>
       </div>
       <div class="flex justify-between">
@@ -22,11 +22,15 @@
         <button @click="backToLobby()">Back to the Lobby</button>
       </div>
     </div>
-    <div v-else class="flex flex-col gap-[6rem] items-center">
+    <div v-else class="flex flex-col items-center gap-[6rem]">
       <p>Result List</p>
       <table>
         <tbody>
-          <tr v-for="player in myStore.ranks" :key="player" class="flex items-center justify-between">
+          <tr
+            v-for="player in myStore.ranks"
+            :key="player"
+            class="flex items-center justify-between"
+          >
             <td>{{ myStore.ranks.indexOf(player) + 1 }}</td>
             <td class="name-data" colspan="2">{{ player.name }}</td>
             <td>{{ player.playerPoints }}</td>
@@ -94,12 +98,32 @@ const ranks = [
     name: 'Oktalon',
     points: 15,
   },
-]
+];
 </script>
 
 <style scoped>
 button {
   padding: 15px 30px;
+}
+
+.place {
+  opacity: 0;
+  animation: appearing 1s ease forwards;
+}
+.firstPlace {
+  animation-delay: 1s;
+}
+.secondPlace {
+  animation-delay: 2s;
+}
+.thirdPlace {
+  animation-delay: 3s;
+}
+
+@keyframes appearing {
+  to {
+    opacity: 1;
+  }
 }
 
 .rank {
