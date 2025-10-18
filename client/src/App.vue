@@ -31,6 +31,12 @@ div {
   font-size: 15pt;
 }
 
+img {
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10+ */
+    user-select: none; /* Standard syntax */
+}
+
 button {
   background: transparent;
   border: 2px solid #eaeaea;
