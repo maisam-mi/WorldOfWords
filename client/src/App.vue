@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-[20rem] mt-[15rem]">
+  <div class="mx-[1rem] md:mx-[10rem] xl:mx-[20rem] mt-[15rem]">
     <Transition>
       <RouterView />
     </Transition>
