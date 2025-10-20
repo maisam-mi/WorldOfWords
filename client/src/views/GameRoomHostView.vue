@@ -1,9 +1,9 @@
 <template>
-  <main class="flex flex-col gap-[4rem]">
-    <div class="flex justify-evenly">
-      <div>
+  <main class="mt-[4rem] flex flex-col gap-[4rem] md:mt-0">
+    <div class="flex flex-col justify-evenly gap-3 md:flex-row md:gap-0">
+      <div class="flex justify-evenly md:flex-col">
         <p>Timelimit</p>
-        <div class="mt-2 flex gap-3">
+        <div class="flex gap-3 md:mt-2">
           <img
             src="/icons/counter.svg"
             alt="decrease button"
@@ -19,9 +19,9 @@
           />
         </div>
       </div>
-      <div>
+      <div class="flex justify-evenly md:flex-col">
         <p>Rounds</p>
-        <div class="mt-2 flex gap-3">
+        <div class="flex gap-3 md:mt-2">
           <img
             src="/icons/counter.svg"
             alt="decrease button"
@@ -47,7 +47,7 @@
     </div>
     <div class="text-left">
       <p>Categories:</p>
-      <form class="mt-2 flex gap-4">
+      <form class="mt-2 flex flex-wrap gap-4">
         <div v-for="category in myStore.categories" :key="category">
           <input
             type="checkbox"
@@ -75,7 +75,7 @@
         </TransitionGroup>
       </tbody>
     </table>
-    <div class="flex justify-between">
+    <div class="flex flex-col justify-between gap-3 md:flex-row md:gap-0">
       <button @click="leaving()">Leave the Lobby</button>
       <button @click="copyContent()">Invite Players</button>
       <button @click="startTheGame()">Start the Game</button>
@@ -262,5 +262,27 @@ td {
 .name-data {
   width: 60%;
   text-align: left;
+}
+
+@media only screen and (max-width: 768px) {
+  button {
+    padding: 15px 30px;
+  }
+
+  td {
+    width: 20%;
+    padding: 10px;
+    padding-left: 1rem;
+  }
+
+  .kick-button {
+    padding: 5px 35px;
+    text-align: center;
+  }
+
+  .name-data {
+    width: 40%;
+    text-align: left;
+  }
 }
 </style>

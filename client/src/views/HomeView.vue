@@ -1,5 +1,5 @@
 <template>
-  <main class="flex flex-col gap-4 items-center">
+  <main class="flex flex-col items-center mt-[10rem] md:mt-0">
     <img src="/logo/logo.webp" alt="logo of World of Words" />
     <input type="text" name="name" placeholder="Name" v-model="username"/>
     <button @click="createLobby()">Create a lobby</button>
@@ -43,7 +43,17 @@ const enterLobby = () => {
 </script>
 
 <style scoped>
+main{
+  gap: 1rem;
+}
+
 button{
   padding: 15px 30px;
+}
+
+@media only screen and (max-width: 768px) {
+  main {
+    gap: 3rem;
+  }
 }
 </style>

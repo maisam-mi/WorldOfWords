@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-[1rem] md:mx-[10rem] xl:mx-[20rem] mt-[15rem]">
+  <div class="mx-[2rem] md:mx-[10rem] xl:mx-[20rem] md:mt-[15rem]">
     <Transition>
       <RouterView />
     </Transition>
@@ -67,5 +67,11 @@ input:focus {
 .v-enter-from,
 .v-leave-to {
   opacity: 0;
+}
+
+@media only screen and (max-width: 768px) {
+  button, input {
+    width: 90%;
+  }
 }
 </style>
