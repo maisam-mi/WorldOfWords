@@ -1,5 +1,5 @@
 <template>
-  <main class="flex flex-col items-center">
+  <main class="mt-[10rem] flex flex-col items-center md:mt-0">
     <p>Round {{ myStore.lobby.rounds.length }}</p>
     <p class="letter">{{ myStore.lobby.rounds[myStore.lobby.rounds.length - 1] }}</p>
     <table>
@@ -46,5 +46,15 @@ td {
 .name-data {
   width: 40%;
   text-align: left;
+}
+
+@media only screen and (max-width: 768px) {
+  .letter {
+    font-size: 17rem;
+  }
+
+  table {
+    width: 80%;
+  }
 }
 </style>

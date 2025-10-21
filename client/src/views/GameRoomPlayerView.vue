@@ -1,11 +1,11 @@
 <template>
-  <main class="flex flex-col gap-[4rem]">
-    <div class="flex justify-evenly">
-      <div>
+  <main class="mt-[4rem] flex flex-col gap-[4rem] md:mt-0">
+    <div class="flex flex-col justify-evenly gap-3 md:flex-row md:gap-0">
+      <div class="flex justify-evenly md:flex-col">
         <p>Timelimit</p>
         <p>{{ formatedTimeLimit }}</p>
       </div>
-      <div>
+      <div class="flex justify-evenly md:flex-col">
         <p>Rounds</p>
         <p>{{ myStore.lobby.countOfRounds }}</p>
       </div>
@@ -18,7 +18,7 @@
     </div>
     <div class="text-left">
       <p>Categories:</p>
-      <div class="mt-2 flex gap-4">
+      <div class="mt-2 flex flex-wrap gap-4">
         <TransitionGroup name="span">
           <span v-for="category in myStore.lobby.categories" :key="category" :for="category">{{
             category
@@ -37,8 +37,8 @@
         </TransitionGroup>
       </tbody>
     </table>
-    <div class="flex justify-between">
-      <button @click="leaving()">Leave the Lobby</button>
+    <div class="flex flex-col justify-between gap-3 md:flex-row md:gap-0">
+      <button class="self-center" @click="leaving()">Leave the Lobby</button>
       <!-- <button @click="copyContent()">Invite Players</button> -->
     </div>
   </main>

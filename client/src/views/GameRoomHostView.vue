@@ -76,9 +76,9 @@
       </tbody>
     </table>
     <div class="flex flex-col justify-between gap-3 md:flex-row md:gap-0">
-      <button @click="leaving()">Leave the Lobby</button>
-      <button @click="copyContent()">Invite Players</button>
-      <button @click="startTheGame()">Start the Game</button>
+      <button class="self-center" @click="leaving()">Leave the Lobby</button>
+      <button class="self-center" @click="copyContent()">Invite Players</button>
+      <button class="self-center" @click="startTheGame()">Start the Game</button>
     </div>
   </main>
 </template>

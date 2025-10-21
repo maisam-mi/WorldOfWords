@@ -1,10 +1,10 @@
 <template>
-  <main class="flex flex-col items-center gap-5">
+  <main class="flex flex-col items-center gap-5 mt-[9rem] md:mt-0">
     <div class="mt-10 flex gap-10">
       <p>{{ myStore.lobby.rounds[myStore.lobby.rounds.length - 1] }}</p>
       <p>{{ formatedTimeLimit }}</p>
     </div>
-    <div class="flex flex-col gap-5">
+    <div class="flex flex-col gap-5 w-full md:w-auto items-center">
       <input
         v-for="input in myStore.inputWords"
         :key="input"
