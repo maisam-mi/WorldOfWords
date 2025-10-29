@@ -1,7 +1,5 @@
 ![World of Words logo](resources/banner.png)
 
-💻 **in progress**
-
 "World of Words" is a game, where you can spend time with your friends and family and learn new words.
 
 ## Structure of the website
