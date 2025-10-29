@@ -1,5 +1,5 @@
 <template>
-  <main class="flex flex-col gap-[4rem] mt-[4rem] md:mt-0">
+  <main class="mt-[4rem] flex flex-col gap-[4rem] md:mt-0">
     <div class="text-left">
       <p class="text-[30pt]">{{ myStore.lobby.rounds[myStore.lobby.rounds.length - 1] }}</p>
       <p>Discuss about the answers.</p>
@@ -7,18 +7,27 @@
         ! Click on <img src="/icons/check_mark.svg" alt="check_mark" /> for right answers.
       </p>
     </div>
-    <table>
-      <tr>
-        <th>Players</th>
-        <th v-for="category in myStore.lobby.categories" :key="category">{{ category }}</th>
-      </tr>
-      <tr v-for="player in myStore.lobby.players" :key="player.name">
-        <td>{{ player.name }}</td>
-        <td v-for="word in player.progress[myStore.lobby.rounds.length - 1].words" :key="word">
-          {{ word.value }} <img src="/icons/check_mark.svg" alt="check_mark" @click="calculatePoints(player.id, word)" :style="{ opacity: word.wordPoints == 10 ? '1' : '0.5' }" />
-        </td>
-      </tr>
-    </table>
+    <div class="w-[100%] overflow-auto">
+      <table>
+        <tr>
+          <th>Players</th>
+          <th v-for="category in myStore.lobby.categories" :key="category">{{ category }}</th>
+        </tr>
+        <tr v-for="player in myStore.lobby.players" :key="player.name">
+          <td>{{ player.name }}</td>
+          <td v-for="word in player.progress[myStore.lobby.rounds.length - 1].words" :key="word">
+            {{ word.value }}
+            <img
+              src="/icons/check_mark.svg"
+              alt="check_mark"
+              @click="calculatePoints(player.id, word)"
+              :style="{ opacity: word.wordPoints == 10 ? '1' : '0.5' }"
+            />
+          </td>
+        </tr>
+      </table>
+    </div>
+
     <div class="flex flex-col justify-between gap-3 md:flex-row md:gap-0">
       <button class="self-center" @click="leaving()">Cancel the game</button>
       <button class="self-center" @click="goToNextRound()">Next Round</button>
@@ -33,15 +42,15 @@ import { useRouter } from 'vue-router';
 const myStore = mainStore();
 const router = useRouter();
 
-// this method send an event to server for accepting or deny the word and calculate points. 
+// this method send an event to server for accepting or deny the word and calculate points.
 const calculatePoints = (wordsOwnerId, word) => {
   myStore.socket.emit('calculate Points', myStore.lobby.url, wordsOwnerId, word.category);
-}
+};
 
-// this method sends an event to find out, where the players should be leaded. 
+// this method sends an event to find out, where the players should be leaded.
 const goToNextRound = () => {
   myStore.socket.emit('go to result or next round', myStore.lobby.url);
-}
+};
 
 const leaving = () => {
   myStore.socket.emit('im leaving the lobby', myStore.lobby.url);
@@ -72,7 +81,6 @@ myStore.socket.on('you are not the admin of this lobby', () => {
 myStore.socket.on('the game is finished', () => {
   router.push('/result');
 });
-
 </script>
 
 <style scoped>
@@ -81,19 +89,23 @@ button {
 }
 
 table {
-  width: auto;
+  width: 100%;
   border-collapse: collapse;
 }
 tr {
   border-bottom: 3px solid #aeaeae;
 }
-tr:last-child{
+tr:last-child {
   border-bottom: none;
 }
 th,
 td {
   border-right: 3px solid #aeaeae;
   padding: 1rem 2rem;
+}
+th:last-child,
+td:last-child {
+  border-right: none;
 }
 
 p img {

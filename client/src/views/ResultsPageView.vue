@@ -1,7 +1,7 @@
 <template>
-  <main>
+  <main class="mt-[5rem] md:mt-0">
     <div v-if="!showWholeResult" class="flex flex-col gap-[6rem]">
-      <div class="flex justify-center gap-[5rem]">
+      <div class="flex justify-center gap-[0rem] md:gap-[5rem]">
         <div v-if="myStore.ranks[1] != null" class="place secondPlace mt-20">
           <p class="rank">2</p>
           <p>{{ myStore.ranks[1].name }} {{ myStore.ranks[1].playerPoints }} points</p>
@@ -22,7 +22,7 @@
         <button class="self-center" @click="backToLobby()">Back to the Lobby</button>
       </div>
     </div>
-    <div v-else class="flex flex-col items-center gap-[6rem]">
+    <div v-else class="mt-[10rem] flex flex-col items-center gap-[6rem] md:mt-0">
       <p>Result List</p>
       <table>
         <tbody>
@@ -141,5 +141,14 @@ td {
 .name-data {
   width: 40%;
   text-align: left;
+}
+@media only screen and (max-width: 768px) {
+  .rank {
+    font-size: 4rem;
+  }
+
+  table {
+    width: 80%;
+  }
 }
 </style>

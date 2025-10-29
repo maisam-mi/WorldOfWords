@@ -75,7 +75,7 @@
         </TransitionGroup>
       </tbody>
     </table>
-    <div class="flex flex-col justify-between gap-3 md:flex-row md:gap-0">
+    <div class="flex flex-col justify-between gap-3 mb-5 md:flex-row md:gap-0">
       <button class="self-center" @click="leaving()">Leave the Lobby</button>
       <button class="self-center" @click="copyContent()">Invite Players</button>
       <button class="self-center" @click="startTheGame()">Start the Game</button>

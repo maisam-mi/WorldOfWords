@@ -1,26 +1,32 @@
 <template>
-  <main class="flex flex-col gap-[4rem] mt-[4rem] md:mt-0">
+  <main class="mt-[4rem] flex flex-col gap-[4rem] md:mt-0">
     <div class="text-left">
       <p class="text-[30pt]">{{ myStore.lobby.rounds[myStore.lobby.rounds.length - 1] }}</p>
       <p>Here you can see the answers of all players.</p>
-      <p class="text-[13pt]">
-        ! The admin chooses the right answers.
-      </p>
+      <p class="text-[13pt]">! The admin chooses the right answers.</p>
     </div>
-    <table>
-      <tr>
-        <th>Players</th>
-        <th v-for="category in myStore.lobby.categories" :key="category">{{ category }}</th>
-      </tr>
-      <tr v-for="player in myStore.lobby.players" :key="player.name">
-        <td>{{ player.name }}</td>
-        <td v-for="word in player.progress[myStore.lobby.rounds.length - 1].words" :key="word">
-          {{ word.value }} <img src="/icons/check_mark.svg" alt="check_mark" :style="{ opacity: word.wordPoints == 10 ? '1' : '0.5' }" />
-        </td>
-      </tr>
-    </table>
-    <div class="flex justify-between">
-      <button @click="leaving()">Cancel the game</button>
+    <div class="w-[100%] overflow-auto">
+      <table>
+        <tr>
+          <th>Players</th>
+          <th v-for="category in myStore.lobby.categories" :key="category">{{ category }}</th>
+        </tr>
+        <tr v-for="player in myStore.lobby.players" :key="player.name">
+          <td>{{ player.name }}</td>
+          <td v-for="word in player.progress[myStore.lobby.rounds.length - 1].words" :key="word">
+            {{ word.value }}
+            <img
+              src="/icons/check_mark.svg"
+              alt="check_mark"
+              :style="{ opacity: word.wordPoints == 10 ? '1' : '0.5' }"
+            />
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="flex flex-col justify-between md:flex-row md:gap-0">
+      <button class="self-center" @click="leaving()">Cancel the game</button>
     </div>
   </main>
 </template>
@@ -61,7 +67,6 @@ myStore.socket.on('you are not the admin of this lobby', () => {
 myStore.socket.on('the game is finished', () => {
   router.push('/result');
 });
-
 </script>
 
 <style scoped>
@@ -70,19 +75,23 @@ button {
 }
 
 table {
-  width: auto;
+  width: 100%;
   border-collapse: collapse;
 }
 tr {
   border-bottom: 3px solid #aeaeae;
 }
-tr:last-child{
+tr:last-child {
   border-bottom: none;
 }
 th,
 td {
   border-right: 3px solid #aeaeae;
   padding: 1rem 2rem;
+}
+th:last-child,
+td:last-child {
+  border-right: none;
 }
 
 p img {
