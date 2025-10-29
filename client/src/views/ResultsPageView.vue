@@ -16,10 +16,10 @@
           <p>{{ myStore.ranks[2].name }} {{ myStore.ranks[2].playerPoints }} points</p>
         </div>
       </div>
-      <div class="flex justify-between">
-        <button @click="leaving()">Leave the Lobby</button>
-        <button @click="showWholeResult = !showWholeResult">Result List</button>
-        <button @click="backToLobby()">Back to the Lobby</button>
+      <div class="flex flex-col justify-between gap-3 md:flex-row md:gap-0">
+        <button class="self-center" @click="leaving()">Leave the Lobby</button>
+        <button class="self-center" @click="showWholeResult = !showWholeResult">Result List</button>
+        <button class="self-center" @click="backToLobby()">Back to the Lobby</button>
       </div>
     </div>
     <div v-else class="flex flex-col items-center gap-[6rem]">

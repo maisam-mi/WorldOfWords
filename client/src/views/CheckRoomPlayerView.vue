@@ -1,5 +1,5 @@
 <template>
-  <main class="flex flex-col gap-[4rem]">
+  <main class="flex flex-col gap-[4rem] mt-[4rem] md:mt-0">
     <div class="text-left">
       <p class="text-[30pt]">{{ myStore.lobby.rounds[myStore.lobby.rounds.length - 1] }}</p>
       <p>Here you can see the answers of all players.</p>

@@ -1,5 +1,5 @@
 <template>
-  <main class="flex flex-col gap-[4rem]">
+  <main class="flex flex-col gap-[4rem] mt-[4rem] md:mt-0">
     <div class="text-left">
       <p class="text-[30pt]">{{ myStore.lobby.rounds[myStore.lobby.rounds.length - 1] }}</p>
       <p>Discuss about the answers.</p>
@@ -19,9 +19,9 @@
         </td>
       </tr>
     </table>
-    <div class="flex justify-between">
-      <button @click="leaving()">Cancel the game</button>
-      <button @click="goToNextRound()">Next Round</button>
+    <div class="flex flex-col justify-between gap-3 md:flex-row md:gap-0">
+      <button class="self-center" @click="leaving()">Cancel the game</button>
+      <button class="self-center" @click="goToNextRound()">Next Round</button>
     </div>
   </main>
 </template>
